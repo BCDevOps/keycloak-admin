@@ -1,0 +1,8 @@
+{
+    "name": "username",
+    "identityProviderAlias": "#{IDP_ALIAS}",
+    "identityProviderMapper": "oidc-username-idp-mapper",
+    "config": {
+        "template": "${ALIAS}\\${CLAIM.preferred_username}"
+    }
+}

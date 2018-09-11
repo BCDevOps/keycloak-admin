@@ -1,0 +1,9 @@
+{
+    "name": "lastName",
+    "identityProviderAlias": "#{IDP_ALIAS}",
+    "identityProviderMapper": "oidc-user-attribute-idp-mapper",
+    "config": {
+        "claim": "lastName",
+        "user.attribute": "firstName"
+    }
+}
