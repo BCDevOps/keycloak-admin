@@ -57,7 +57,7 @@ echo 'Deleting Client'
 curl -sX DELETE "$KEYCLOAK_URL/admin/realms/$SOURCE_REALM/clients/${CLIENT_KC_ID}" -H "Authorization: Bearer $KEYCLOAK_ACCESS_TOKEN"
 
 echo 'Creating Client'
-cat templates/$SOURCE_REALM/client.oidc.broker.json | sed -e "s|#{CLIENT_ID}|${CLIENT_ID}|g" | sed -e "s|#{REDIRECT_URI}|$KEYCLOAK_URL/realms/$TARGET_REALM/broker/$IDP_ID/endpoint|g" | curl -sX POST -d '@-' -H 'Content-Type: application/json' -H "Authorization: Bearer $KEYCLOAK_ACCESS_TOKEN" "$KEYCLOAK_URL/admin/realms/$SOURCE_REALM/clients"
+cat templates/$SOURCE_REALM/client.oidc.broker.json | sed -e "s|#{CLIENT_ID}|${CLIENT_ID}|g" | sed -e "s|#{REDIRECT_URI}|$KEYCLOAK_URL/realms/$TARGET_REALM/broker/$IDP_ID/endpoint*|g" | curl -sX POST -d '@-' -H 'Content-Type: application/json' -H "Authorization: Bearer $KEYCLOAK_ACCESS_TOKEN" "$KEYCLOAK_URL/admin/realms/$SOURCE_REALM/clients"
 
 echo 'Retrieving Client'
 curl -sX GET "$KEYCLOAK_URL/admin/realms/$SOURCE_REALM/clients?clientId=${CLIENT_ID}" -H "Authorization: Bearer $KEYCLOAK_ACCESS_TOKEN" -o cache/client.current.json
