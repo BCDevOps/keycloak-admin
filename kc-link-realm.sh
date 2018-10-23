@@ -3,14 +3,16 @@
 # Reference:
 # https://www.keycloak.org/docs-api/3.3/rest-api/#_identity_providers_resource
 
-set -e
-if [ "$1" == "" ] || [ "$2" == "" ] || [ "$3" == "" ]; then
+set -Eeuo pipefail
+#set -x
+
+if [ "$1" == "" ] || [ "$2" == "" ] || [ "$3" == "" ] || [ "$4" == "" ]; then
     echo "Error: Missing Arguments"
     echo ''
     echo "Usage:"
-    echo "$0 tes|dev|prod '<from this realm>' '<to this realm>'"
+    echo "$0 tes|dev|prod '<from this realm>' '<to this realm>' '<idp name>'"
     echo ''
-    echo "e.g.:$0 'idir' 'master'"
+    echo "e.g.:$0 'idir' 'tfrs' idir"
     echo "Creates a Identity Provider in the 'master' realm linked to the 'idir' realm"
     echo ''
     exit 1
@@ -23,15 +25,13 @@ source "setenv-$1.sh"
 #KEYCLOAK_CLIENT_ID=remote-admin-client
 #KEYCLOAK_CLIENT_SECRET=
 
-
-
 SOURCE_REALM="$2"
 TARGET_REALM="$3"
 IDP_ID="$4"
 
 
-echo "TARGET_REALM:${TARGET_REALM}"
-echo "IDP_ID:${IDP_ID}"
+#echo "TARGET_REALM:${TARGET_REALM}"
+#echo "IDP_ID:${IDP_ID}"
 
 #exit 1
 
@@ -45,25 +45,28 @@ curl -sX GET "$KEYCLOAK_URL/realms/$SOURCE_REALM/.well-known/openid-configuratio
 curl -sX GET "$KEYCLOAK_URL/admin/realms/$TARGET_REALM/identity-provider/instances" -H "Authorization: Bearer $KEYCLOAK_ACCESS_TOKEN" -o cache/realm.$TARGET_REALM.idp.json
 
 #exit 1
-
-
+#set -x
 IDP_NAME="$(jq -rj '.displayName' "cache/realm.${SOURCE_REALM}.json")"
 CLIENT_ID="$KEYCLOAK_URL/realms/$TARGET_REALM"
 
 curl -sX GET "$KEYCLOAK_URL/admin/realms/$SOURCE_REALM/clients?clientId=${CLIENT_ID}" -H "Authorization: Bearer $KEYCLOAK_ACCESS_TOKEN" -o cache/client.previous.json
-CLIENT_KC_ID=$(jq -r '.[].id' cache/client.previous.json)
 
-echo 'Deleting Client'
-curl -sX DELETE "$KEYCLOAK_URL/admin/realms/$SOURCE_REALM/clients/${CLIENT_KC_ID}" -H "Authorization: Bearer $KEYCLOAK_ACCESS_TOKEN"
 
-echo 'Creating Client'
-cat templates/$SOURCE_REALM/client.oidc.broker.json | sed -e "s|#{CLIENT_ID}|${CLIENT_ID}|g" | sed -e "s|#{REDIRECT_URI}|$KEYCLOAK_URL/realms/$TARGET_REALM/broker/$IDP_ID/endpoint*|g" | curl -sX POST -d '@-' -H 'Content-Type: application/json' -H "Authorization: Bearer $KEYCLOAK_ACCESS_TOKEN" "$KEYCLOAK_URL/admin/realms/$SOURCE_REALM/clients"
+if [ "$(jq -r '. | length' cache/client.previous.json)" != "0" ]; then
+    CLIENT_KC_ID=$(jq -r '.[].id' cache/client.previous.json)
+    echo "Deleting '${CLIENT_ID}' (${CLIENT_KC_ID}) client from '${SOURCE_REALM}'"
+    curl -sX DELETE "$KEYCLOAK_URL/admin/realms/$SOURCE_REALM/clients/${CLIENT_KC_ID}" -H "Authorization: Bearer $KEYCLOAK_ACCESS_TOKEN"
+fi
 
-echo 'Retrieving Client'
+echo "Creating client '${CLIENT_ID}' in '${SOURCE_REALM}'"
+cat templates/$SOURCE_REALM/client.oidc.broker.json | sed -e "s|#{CLIENT_ID}|${CLIENT_ID}|g" | sed -e "s|#{REDIRECT_URI}|$KEYCLOAK_URL/realms/$TARGET_REALM/broker/$IDP_ID/endpoint*|g" > cache/curl-body.txt
+curl -sSX POST -d '@cache/curl-body.txt' -H 'Content-Type: application/json' -H "Authorization: Bearer $KEYCLOAK_ACCESS_TOKEN" "$KEYCLOAK_URL/admin/realms/$SOURCE_REALM/clients"
+
+echo "Retrieving client '${CLIENT_ID}' from '${SOURCE_REALM}'"
 curl -sX GET "$KEYCLOAK_URL/admin/realms/$SOURCE_REALM/clients?clientId=${CLIENT_ID}" -H "Authorization: Bearer $KEYCLOAK_ACCESS_TOKEN" -o cache/client.current.json
 CLIENT_KC_ID=$(jq -r '.[].id' cache/client.current.json)
 
-echo 'Retrieving Client Secret'
+echo "Retrieving client secret '${CLIENT_ID}' (${CLIENT_KC_ID}) from '${SOURCE_REALM}''"
 CLIENT_SECRET=$(curl -sX GET "$KEYCLOAK_URL/admin/realms/$SOURCE_REALM/clients/${CLIENT_KC_ID}/client-secret" -H "Authorization: Bearer $KEYCLOAK_ACCESS_TOKEN" | jq -r '.value')
 
 #set -x
@@ -73,11 +76,12 @@ jq -j "select(.identityProviderMappers) | .identityProviderMappers[] | select(.i
 curl -sX DELETE "$KEYCLOAK_URL/admin/realms/$TARGET_REALM/identity-provider/instances/$IDP_ID" -H "Authorization: Bearer $KEYCLOAK_ACCESS_TOKEN"
 #set +x
 
-echo 'Creating IdP'
+echo "Creating '${IDP_ID}' IdP in '${TARGET_REALM}'"
 cat templates/$SOURCE_REALM/idp.keycloak-oidc.json | sed -e "s|#{KEYCLOAK_URL}|${KEYCLOAK_URL}|g"| sed -e "s|#{SOURCE_REALM}|${SOURCE_REALM}|g" | sed -e "s|#{ALIAS}|${IDP_ID}|g"  | sed -e "s|#{DISPLAY_NAME}|${IDP_NAME}|g" | sed -e "s|#{CLIENT_ID}|${CLIENT_ID}|g"| sed -e "s|#{CLIENT_SECRET}|${CLIENT_SECRET}|g" | curl -sX POST -d '@-' -H 'Content-Type: application/json' -H "Authorization: Bearer $KEYCLOAK_ACCESS_TOKEN" "$KEYCLOAK_URL/admin/realms/$TARGET_REALM/identity-provider/instances"
 
-echo 'Adding IdP Mappers'
+#echo 'Adding IdP Mappers'
 #set -x
 find templates/$SOURCE_REALM/idp-mappers -type f | while read mapper; do
+    echo "Adding '${mapper}' IdP Mapper"
     sed -e "s|#{IDP_ALIAS}|${IDP_ID}|g" "${mapper}" | curl -sX POST -d '@-' -H 'Content-Type: application/json' -H "Authorization: Bearer $KEYCLOAK_ACCESS_TOKEN" "$KEYCLOAK_URL/admin/realms/$TARGET_REALM/identity-provider/instances/$IDP_ID/mappers"
 done
