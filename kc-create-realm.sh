@@ -17,9 +17,11 @@ if [ "$1" == "" ] || [ "$2" == "" ]; then
     echo ''
     exit 1
 fi
+SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null && pwd )"
+source "${SCRIPT_DIR}/setenv-$1.sh"
 
-source "setenv-$1.sh"
-
+TEMPLATES_DIR="${SCRIPT_DIR}/templates"
+CACHE_DIR="${SCRIPT_DIR}/cache"
 
 REALM_NAME="$2"
 
@@ -37,5 +39,5 @@ REALM_ID="$(_curl -sX GET "$KEYCLOAK_URL/admin/realms/$REALM_NAME" -H "Accept: a
 
 if [ "${REALM_ID}" == "" ]; then
     echo "Creating '${REALM_NAME}' Realm"
-    cat templates/new-realm.json | sed -e "s|#{NAME}|${REALM_NAME}|g" | _curl -sX POST -d '@-' -H 'Content-Type: application/json' "$KEYCLOAK_URL/admin/realms"
+    cat ${TEMPLATES_DIR}/new-realm.json | sed -e "s|#{NAME}|${REALM_NAME}|g" | _curl -sX POST -d '@-' -H 'Content-Type: application/json' "$KEYCLOAK_URL/admin/realms"
 fi

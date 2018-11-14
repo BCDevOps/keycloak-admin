@@ -26,3 +26,5 @@ cache
 setenv-*.sh
 output/
 
+node_modules/
+realms/

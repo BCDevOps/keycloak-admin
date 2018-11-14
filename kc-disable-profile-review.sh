@@ -18,8 +18,11 @@ if [ "$1" == "" ] || [ "$2" == "" ]; then
     exit 1
 fi
 
-source "setenv-$1.sh"
+SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null && pwd )"
+source "${SCRIPT_DIR}/setenv-$1.sh"
 
+TEMPLATES_DIR="${SCRIPT_DIR}/templates"
+CACHE_DIR="${SCRIPT_DIR}/cache"
 
 REALM_NAME="$2"
 
