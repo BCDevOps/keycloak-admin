@@ -32,4 +32,4 @@ export KEYCLOAK_ACCESS_TOKEN=$(curl -sX POST -u "$KEYCLOAK_CLIENT_ID:$KEYCLOAK_C
 
 mkdir -p output
 curl -sX GET "$KEYCLOAK_URL/admin/realms" -H "Accept: application/json" -H "Authorization: Bearer $KEYCLOAK_ACCESS_TOKEN"  -o "output/realms.${ENV_NAME}.json"
-jq -r '.[] | [.id, .identityProviders[]?.alias] | @csv' "output/realms.${ENV_NAME}.json" > "output/realms.${ENV_NAME}.txt"
+jq -r '.[] | [.id, .displayName, .identityProviders[]?.alias] | @csv' "output/realms.${ENV_NAME}.json" > "output/realms.${ENV_NAME}.txt"
