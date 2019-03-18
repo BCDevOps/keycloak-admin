@@ -12,15 +12,15 @@
     "firstBrokerLoginFlowAlias": "first broker login",
     "config": {
         "validateSignature": "true",
-        "userInfoUrl": "#{KEYCLOAK_URL}/realms/idir/protocol/openid-connect/userinfo",
-        "tokenUrl": "#{KEYCLOAK_URL}/realms/idir/protocol/openid-connect/token",
+        "userInfoUrl": "#{KEYCLOAK_URL}/realms/_bceid/protocol/openid-connect/userinfo",
+        "tokenUrl": "#{KEYCLOAK_URL}/realms/_bceid/protocol/openid-connect/token",
         "clientId": "#{CLIENT_ID}",
-        "authorizationUrl": "#{KEYCLOAK_URL}/realms/idir/protocol/openid-connect/auth",
-        "jwksUrl": "#{KEYCLOAK_URL}/realms/idir/protocol/openid-connect/certs",
-        "logoutUrl": "#{KEYCLOAK_URL}/realms/idir/protocol/openid-connect/logout",
+        "authorizationUrl": "#{KEYCLOAK_URL}/realms/_bceid/protocol/openid-connect/auth",
+        "jwksUrl": "#{KEYCLOAK_URL}/realms/_bceid/protocol/openid-connect/certs",
+        "logoutUrl": "#{KEYCLOAK_URL}/realms/_bceid/protocol/openid-connect/logout",
         "clientSecret": "#{CLIENT_SECRET}",
         "backchannelSupported": "true",
-        "issuer": "#{KEYCLOAK_URL}/realms/idir",
+        "issuer": "#{KEYCLOAK_URL}/realms/_bceid",
         "useJwksUrl": "true"
     }
 }
