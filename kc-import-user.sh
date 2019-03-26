@@ -50,7 +50,7 @@ SOURCE_USER_ID="$(jq -r '.[0].id' $CACHE_DIR/users.source.json)"
 SOURCE_USER_NAME="$(jq -r '.[0].username' $CACHE_DIR/users.source.json)"
 
 
-USERNAME_TEMPLATE='${ALIAS}\${CLAIM.preferred_username}'
+USERNAME_TEMPLATE='${CLAIM.preferred_username}@${ALIAS}'
 TARGET_USERNAME="$(echo "${USERNAME_TEMPLATE}" | sed "s|\${ALIAS}|${TARGET_IDP}|g"  | sed "s|\${CLAIM.preferred_username}|${USERNAME}|g")"
 TARGET_USERNAME_URL_ENCODED="${TARGET_USERNAME#*\\}"
 
