@@ -42,3 +42,5 @@ if [ "${REALM_ID}" == "" ]; then
     echo "Creating '${REALM_NAME}' Realm with name '${REALM_DISPLAY_NAME}'"
     cat ${TEMPLATES_DIR}/new-realm.json | sed -e "s|#{NAME}|${REALM_NAME}|g" | sed -e "s|#{DISPLAY_NAME}|${REALM_DISPLAY_NAME}|g" | _curl -sX POST -d '@-' -H 'Content-Type: application/json' "$KEYCLOAK_URL/admin/realms"
 fi
+
+${SCRIPT_DIR}/kc-update-realm-viewer.sh $1
