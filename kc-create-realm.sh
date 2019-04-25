@@ -24,6 +24,7 @@ TEMPLATES_DIR="${SCRIPT_DIR}/templates"
 CACHE_DIR="${SCRIPT_DIR}/cache"
 
 REALM_NAME="$2"
+REALM_DISPLAY_NAME="$3"
 
 #exit 1
 
@@ -38,8 +39,8 @@ export KEYCLOAK_ACCESS_TOKEN=$(curl -sX POST -u "$KEYCLOAK_CLIENT_ID:$KEYCLOAK_C
 REALM_ID="$(_curl -sX GET "$KEYCLOAK_URL/admin/realms/$REALM_NAME" -H "Accept: application/json" | jq -r '.id')"
 
 if [ "${REALM_ID}" == "" ]; then
-    echo "Creating '${REALM_NAME}' Realm"
-    cat ${TEMPLATES_DIR}/new-realm.json | sed -e "s|#{NAME}|${REALM_NAME}|g" | _curl -sX POST -d '@-' -H 'Content-Type: application/json' "$KEYCLOAK_URL/admin/realms"
+    echo "Creating '${REALM_NAME}' Realm with name '${REALM_DISPLAY_NAME}'"
+    cat ${TEMPLATES_DIR}/new-realm.json | sed -e "s|#{NAME}|${REALM_NAME}|g" | sed -e "s|#{DISPLAY_NAME}|${REALM_DISPLAY_NAME}|g" | _curl -sX POST -d '@-' -H 'Content-Type: application/json' "$KEYCLOAK_URL/admin/realms"
 fi
 
 ${SCRIPT_DIR}/kc-update-realm-viewer.sh $1
