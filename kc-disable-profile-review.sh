@@ -31,6 +31,6 @@ REALM_NAME="$2"
 export KEYCLOAK_ACCESS_TOKEN=$(curl -sX POST -u "$KEYCLOAK_CLIENT_ID:$KEYCLOAK_CLIENT_SECRET" "$KEYCLOAK_URL/realms/master/protocol/openid-connect/token" -H "Content-Type: application/x-www-form-urlencoded" -d 'grant_type=client_credentials' -d 'client_id=admin-cli' | jq -r '.access_token')
 
 echo "Disabling 'Review Profile' on 'First Broker Login' in '${REALM_NAME}' Realm"
-CONFIG_ID="$(curl -H "Authorization: Bearer $KEYCLOAK_ACCESS_TOKEN" -sX GET "${KEYCLOAK_URL}/admin/realms/tfrs/authentication/flows/first%20broker%20login/executions" | jq -r '.[] | select (.providerId == "idp-review-profile") | .authenticationConfig')"
-curl -H "Authorization: Bearer $KEYCLOAK_ACCESS_TOKEN" -sX GET "${KEYCLOAK_URL}/admin/realms/tfrs/authentication/config/${CONFIG_ID}" | jq '.config."update.profile.on.first.login" = "off"' | curl -H "Authorization: Bearer $KEYCLOAK_ACCESS_TOKEN" -sX PUT -d '@-' -H 'Content-Type: application/json' "${KEYCLOAK_URL}/admin/realms/tfrs/authentication/config/${CONFIG_ID}"
+CONFIG_ID="$(curl -H "Authorization: Bearer $KEYCLOAK_ACCESS_TOKEN" -sX GET "${KEYCLOAK_URL}/admin/realms/${REALM_NAME}/authentication/flows/first%20broker%20login/executions" | jq -r '.[] | select (.providerId == "idp-review-profile") | .authenticationConfig')"
+curl -H "Authorization: Bearer $KEYCLOAK_ACCESS_TOKEN" -sX GET "${KEYCLOAK_URL}/admin/realms/${REALM_NAME}/authentication/config/${CONFIG_ID}" | jq '.config."update.profile.on.first.login" = "off"' | curl -H "Authorization: Bearer $KEYCLOAK_ACCESS_TOKEN" -sX PUT -d '@-' -H 'Content-Type: application/json' "${KEYCLOAK_URL}/admin/realms/${REALM_NAME}/authentication/config/${CONFIG_ID}"
 
