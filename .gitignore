@@ -28,3 +28,6 @@ output/
 
 node_modules/
 realms/
+
+# Creds
+*creds*
