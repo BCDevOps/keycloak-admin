@@ -1,0 +1,31 @@
+---
+#tasks file for creating new realm
+
+## Provision Realm
+- name: Render realm template from input content
+  set_fact: 
+    realm_content: "{{ lookup('template', 'templates/new_realm.json.j2') }}"
+- name: Check if realm exists
+  uri: 
+    url: "{{ keycloak_url }}/auth/admin/realms/{{ realm_data.realm.id }}"
+    method: GET
+    body_format: json
+    return_content: yes
+    headers: 
+      Authorization: "Bearer {{ token_data }}"
+  register: realm_status
+  ignore_errors: true
+- name: Set realm id fact
+  set_fact:
+    realm_id: "{{ realm_status.json.id | default('') }}"
+- name: Create realm
+  uri: 
+    url: "{{ keycloak_url }}/auth/admin/realms"
+    method: POST
+    body_format: json
+    body: "{{ realm_content }}"
+    return_content: yes
+    status_code: 201
+    headers: 
+      Authorization: "Bearer {{ token_data }}"
+  when: realm_id == ""

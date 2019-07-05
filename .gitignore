@@ -31,3 +31,6 @@ realms/
 
 # Creds
 *creds*
+
+# env var for apb
+keycloak_realm_operator/roles/keycloakrealm/vars/main-local.yml

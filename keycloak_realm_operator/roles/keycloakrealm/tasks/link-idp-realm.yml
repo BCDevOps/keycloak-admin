@@ -1,0 +1,84 @@
+---
+# tasks file for linking IDP to realm
+
+- name: Set IDP name mapper fact
+  set_fact:
+    idp_name_id: { IDIR: idir, GitHub: _github, BCeID: _bceid }
+- name: Set IDP realm ID fact
+  set_fact:
+    idp_realm_id: "{{ idp_name_id[idp] }}"
+- name: Set template parameters fact
+  set_fact:
+    redirect_url: "{{ keycloak_url }}/auth/realms/{{ realm }}/broker/{{ idp_realm_id }}/endpoint*"
+    client_id: "{{ keycloak_url }}/auth/realms/{{ realm }}"
+# --------------------TODO: if the IDP client exists in the IDP realm already, delete it
+- name: Read in new json data for client
+  set_fact: 
+    client_content: "{{ lookup('template', 'templates/{{ idp_realm_id }}/client.oidc.broker.json.j2') }}"
+# NOTE: will throw when client exists
+- name: Create client from template
+  uri: 
+    url: "{{ keycloak_url }}/auth/admin/realms/{{ idp_realm_id }}/clients"
+    method: POST
+    body_format: json
+    body: "{{ client_content }}"
+    return_content: yes
+    status_code: 201
+    headers: 
+      Authorization: "Bearer {{ token_data }}"
+- name: Get the ID of the client
+  uri: 
+    url: "{{ keycloak_url }}/auth/admin/realms/{{ idp_realm_id }}/clients?clientId={{ client_id }}"
+    method: GET
+    body_format: json
+    return_content: yes
+    headers: 
+      Authorization: "Bearer {{ token_data }}"
+  register: idp_client_status
+- name: Set IDP client id fact
+  set_fact:
+    idp_client_id: "{{ idp_client_status.json[0].id | default('') }}"
+    idp_client_clientid: "{{ idp_client_status.json[0].clientId | default('') }}"
+- name: Get client secret
+  uri: 
+    url: "{{ keycloak_url }}/auth/admin/realms/{{ idp_realm_id }}/clients/{{ idp_client_id }}/client-secret"
+    method: GET
+    body_format: json
+    return_content: yes
+    headers: 
+      Authorization: "Bearer {{ token_data }}"
+  register: idp_client_secret_status
+- name: Set IDP client id fact
+  set_fact:
+    idp_client_secret: "{{ idp_client_secret_status.json.value | default('') }}"
+- debug: msg="{{idp_client_clientid}}, {{idp_client_secret}}"
+# --------------------TODO: if the IDP exists in the new realm already, delete it
+- name: Render IDP template from input content
+  set_fact: 
+    idp_content: "{{ lookup('template', 'templates/{{ idp_realm_id }}/idp.keycloak-oidc.json.j2') }}"
+- name: Create IDP {{ idp }}
+  uri:
+    url: "{{ keycloak_url }}/auth/admin/realms/{{ realm }}/identity-provider/instances"
+    method: POST
+    body_format: json
+    body: "{{ idp_content }}"
+    return_content: yes
+    status_code: 201
+    headers:
+      Authorization: "Bearer {{ token_data }}"
+- name: Read in array of mappers
+  set_fact: 
+    mapper_content_array: "{{ lookup('template', 'templates/{{ idp_realm_id }}/mappers.json.j2') }}"
+- name: Create mapper in IDP {{ idp }}
+  uri: 
+    url: "{{ keycloak_url }}/auth/admin/realms/{{ realm }}/identity-provider/instances/{{ idp_name_id[idp] }}/mappers"
+    method: POST
+    body_format: json
+    body: "{{ mapper_content }}"
+    return_content: yes
+    status_code: 201
+    headers: 
+      Authorization: "Bearer {{ token_data }}"
+  with_items: "{{ mapper_content_array }}"
+  loop_control:
+    loop_var: mapper_content

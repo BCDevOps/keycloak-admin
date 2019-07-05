@@ -1,0 +1,73 @@
+---
+# tasks file for adding an admin user to realm
+
+- name: Check if user exists in IDP realm
+  uri: 
+    url: "{{ keycloak_url }}/auth/admin/realms/{{ admin_idp }}/users/?username={{ admin_username | urlencode }}"
+    method: GET
+    body_format: json
+    return_content: yes
+    headers: 
+      Authorization: "Bearer {{ token_data }}"
+  register: user_sources
+- name: Check if unique user returned
+  fail: msg="Username not valid or unique."
+  when: ( user_sources.json | length != 1 )
+- name: Set user ID fact
+  set_fact:
+    user_id: "{{ user_sources.json[0].id | default('') }}"
+    user_name: "{{ user_sources.json[0].username | default('') }}"
+# create the user account in the new realm
+- name: Set template parameters fact
+  set_fact:
+    new_username: "{{ user_name }}@{{ admin_idp }}"
+# --------------------TODO: encode or check username???
+- name: Check if user exists in new realm
+  uri: 
+    url: "{{ keycloak_url }}/auth/admin/realms/{{ realm }}/users/?username={{ new_username | urlencode }}"
+    method: GET
+    body_format: json
+    return_content: yes
+    headers:
+      Authorization: "Bearer {{ token_data }}"
+  register: user_sources
+- name: Check if user exists by mistake
+  fail: msg="User exists already by mistake."
+  when: ( user_sources.json | length>0 )
+# create user
+- name: Read in new json data for user
+  set_fact: 
+    user_content: "{{ lookup('template', 'templates/new_user.json.j2') }}"
+- name: Create user from template
+  uri: 
+    url: "{{ keycloak_url }}/auth/admin/realms/{{ realm }}/users"
+    method: POST
+    body_format: json
+    body: "{{ user_content }}"
+    return_content: yes
+    status_code: 201
+    headers:
+      Authorization: "Bearer {{ token_data }}"
+- name: Get new user
+  uri: 
+    url: "{{ keycloak_url }}/auth/admin/realms/{{ realm }}/users/?username={{ new_username | urlencode }}"
+    method: GET
+    body_format: json
+    return_content: yes
+    headers:
+      Authorization: "Bearer {{ token_data }}"
+  register: user_info
+- name: Read in new user id
+  set_fact: 
+    new_user_id: "{{ user_info.json[0].id | default('') }}"
+    new_user_federation_content: "{{ lookup('template', 'templates/user_federation.json.j2') }}"
+- name: Setup new user federated link
+  uri: 
+    url: "{{ keycloak_url }}/auth/admin/realms/{{ realm }}/users/{{ new_user_id }}/federated-identity/{{ admin_idp }}"
+    method: POST
+    body_format: json
+    body: "{{ new_user_federation_content }}"
+    return_content: yes
+    status_code: 204
+    headers:
+      Authorization: "Bearer {{ token_data }}"

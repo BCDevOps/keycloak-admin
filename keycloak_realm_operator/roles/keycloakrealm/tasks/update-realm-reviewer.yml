@@ -1,0 +1,43 @@
+---
+# tasks file for Update Realm Reviewer
+# --------------------TODO: determind if this step is needed
+
+# - name: Get <Realm Viewer> Group ID
+#   uri: 
+#     url: "{{ keycloak_url }}/auth/admin/realms/master/groups/?search={{ 'Realm Viewer' | urlencode }}"
+#     method: GET
+#     return_content: true
+#     headers: 
+#       Authorization: "Bearer {{ token_data }}"
+#   register: viewer_groupid_search
+# - debug: msg="{{ viewer_groupid_search }}"
+# - name: set viewer_group_id fact
+#   set_fact: 
+#     viewer_group_id: "{{ viewer_groupid_search.json[0].id }}"
+# - debug: msg="{{ viewer_group_id }}"
+
+# - name: Get new realm client ID in master
+#   uri: 
+#     url: "{{ keycloak_url }}/auth/admin/realms/master/clients/?search={{ realm_id }}-realm"
+#     method: GET
+#     return_content: true
+#     headers: 
+#       Authorization: "Bearer {{ token_data }}"
+#   register: realm_clientid_search
+# - name: set realm_clientid_search fact
+#   set_fact: 
+#     realm_clientid_search: "{{ realm_clientid_search.json[0].id }}"
+# - debug: msg="{{ realm_clientid_search }}"
+
+# - name: Get available roles for the client
+#   uri:
+#     url: "{{ keycloak_url }}/auth/admin/realms/master/groups/{{ viewer_group_id }}/role-mappings/clients/{{ realm_clientid_search }}/available"
+#     method: GET
+#     return_content: true
+#     headers: 
+#       Authorization: "Bearer {{ token_data }}"
+#   register: viewer_group_roles_search
+# - name: set viewer_group_roles_search fact
+#   set_fact: 
+#     realm_clientid_search: "{{ viewer_group_roles_search.json[0].id }}"
+# - debug: msg="{{ viewer_group_roles_search }}"
