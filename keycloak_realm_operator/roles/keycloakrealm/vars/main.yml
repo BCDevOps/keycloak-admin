@@ -3,7 +3,6 @@
 keycloak_client_id: provisioner
 keycloak_client_secret:
 keycloak_url: https://sso-22-devops-sso-sandbox.pathfinder.gov.bc.ca
-admin_username: test-idir
 admin_idp: idir
 token_data: placeholder
 

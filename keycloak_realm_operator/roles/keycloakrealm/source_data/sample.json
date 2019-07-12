@@ -3,7 +3,7 @@
     "realm": {
         "id": "apbrealm",
         "displayName": "Ansible playbook test realm",
-        "adminUser": "abp_test_user",
+        "adminUser": "shellhan",
         "idps": [
             "IDIR",
             "GitHub"

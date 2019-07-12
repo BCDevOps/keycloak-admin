@@ -71,3 +71,24 @@
     status_code: 204
     headers:
       Authorization: "Bearer {{ token_data }}"
+# Add user to admin group:
+- name: Get Realm Admin Group ID
+  uri: 
+    url: "{{ keycloak_url }}/auth/admin/realms/{{ realm }}/groups/?search={{ 'Realm Administrator' | urlencode }}"
+    method: GET
+    return_content: true
+    headers: 
+      Authorization: "Bearer {{ token_data }}"
+  register: admin_groupid_search
+- name: Set admin group ID fact
+  set_fact: 
+    admin_group_id: "{{ admin_groupid_search.json[0].id | default('') }}"
+- name: Add user to admin group
+  uri: 
+    url: "{{ keycloak_url }}/auth/admin/realms/{{ realm }}/users/{{ new_user_id }}/groups/{{ admin_group_id }}"
+    method: PUT
+    body_format: json
+    return_content: yes
+    status_code: 204
+    headers:
+      Authorization: "Bearer {{ token_data }}"
