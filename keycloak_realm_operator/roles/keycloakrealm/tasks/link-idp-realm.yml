@@ -7,9 +7,10 @@
 - name: Set IDP realm ID fact
   set_fact:
     idp_realm_id: "{{ idp_name_id[idp] }}"
+    idp_realm_alias: "{{ idp | lower }}"
 - name: Set template parameters fact
   set_fact:
-    redirect_url: "{{ keycloak_url }}/auth/realms/{{ realm }}/broker/{{ idp_realm_id }}/endpoint*"
+    redirect_url: "{{ keycloak_url }}/auth/realms/{{ realm }}/broker/{{ idp_realm_alias }}/endpoint*"
     client_id: "{{ keycloak_url }}/auth/realms/{{ realm }}"
 # --------------------TODO: if the IDP client exists in the IDP realm already, delete it
 - name: Read in new json data for client
@@ -71,7 +72,7 @@
     mapper_content_array: "{{ lookup('template', 'templates/{{ idp_realm_id }}/mappers.json.j2') }}"
 - name: Create mapper in IDP {{ idp }}
   uri: 
-    url: "{{ keycloak_url }}/auth/admin/realms/{{ realm }}/identity-provider/instances/{{ idp_name_id[idp] }}/mappers"
+    url: "{{ keycloak_url }}/auth/admin/realms/{{ realm }}/identity-provider/instances/{{ idp_realm_alias }}/mappers"
     method: POST
     body_format: json
     body: "{{ mapper_content }}"

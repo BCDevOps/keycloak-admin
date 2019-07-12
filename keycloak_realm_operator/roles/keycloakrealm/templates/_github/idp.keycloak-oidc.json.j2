@@ -1,5 +1,5 @@
 {
-  "alias": "{{ idp_name_id[idp] }}",
+  "alias": "{{ idp_realm_alias }}",
   "displayName": "{{ idp }}",
   "providerId": "keycloak-oidc",
   "enabled": true,
@@ -11,15 +11,15 @@
   "firstBrokerLoginFlowAlias": "first broker login",
   "config": {
     "validateSignature": "true",
-    "userInfoUrl": "{{ keycloak_url }}/auth/realms/{{ idp_name_id[idp] }}/protocol/openid-connect/userinfo",
-    "tokenUrl": "{{ keycloak_url }}/auth/realms/{{ idp_name_id[idp] }}/protocol/openid-connect/token",
+    "userInfoUrl": "{{ keycloak_url }}/auth/realms/{{ idp_realm_id }}/protocol/openid-connect/userinfo",
+    "tokenUrl": "{{ keycloak_url }}/auth/realms/{{ idp_realm_id }}/protocol/openid-connect/token",
     "clientId": "{{ idp_client_clientid }}",
-    "authorizationUrl": "{{ keycloak_url }}/auth/realms/{{ idp_name_id[idp] }}/protocol/openid-connect/auth",
-    "jwksUrl": "{{ keycloak_url }}/auth/realms/{{ idp_name_id[idp] }}/protocol/openid-connect/certs",
-    "logoutUrl": "{{ keycloak_url }}/auth/realms/{{ idp_name_id[idp] }}/protocol/openid-connect/logout",
+    "authorizationUrl": "{{ keycloak_url }}/auth/realms/{{ idp_realm_id }}/protocol/openid-connect/auth",
+    "jwksUrl": "{{ keycloak_url }}/auth/realms/{{ idp_realm_id }}/protocol/openid-connect/certs",
+    "logoutUrl": "{{ keycloak_url }}/auth/realms/{{ idp_realm_id }}/protocol/openid-connect/logout",
     "clientSecret": "{{ idp_client_secret }}",
     "backchannelSupported": "true",
-    "issuer": "{{ keycloak_url }}/auth/realms/{{ idp_name_id[idp] }}",
+    "issuer": "{{ keycloak_url }}/auth/realms/{{ idp_realm_id }}",
     "useJwksUrl": "true"
   }
 }

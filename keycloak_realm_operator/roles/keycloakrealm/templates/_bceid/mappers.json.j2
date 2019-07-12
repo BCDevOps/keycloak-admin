@@ -1,7 +1,7 @@
 [
   {
     "name": "displayName",
-    "identityProviderAlias": "{{ idp_name_id[idp] }}",
+    "identityProviderAlias": "{{ idp_realm_alias }}",
     "identityProviderMapper": "oidc-user-attribute-idp-mapper",
     "config": {
       "claim": "displayName",
@@ -9,14 +9,14 @@
     }
   }, {
     "name": "username",
-    "identityProviderAlias": "{{ idp_name_id[idp] }}",
+    "identityProviderAlias": "{{ idp_realm_alias }}",
     "identityProviderMapper": "oidc-username-idp-mapper",
     "config": {
       "template": "${CLAIM.preferred_username}@${ALIAS}"
     }
   }, {
     "name": "email",
-    "identityProviderAlias": "{{ idp_name_id[idp] }}",
+    "identityProviderAlias": "{{ idp_realm_alias }}",
     "identityProviderMapper": "oidc-user-attribute-idp-mapper",
     "config": {
       "claim": "email",
