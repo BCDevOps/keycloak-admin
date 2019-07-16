@@ -5,4 +5,6 @@ keycloak_client_secret:
 keycloak_url: https://sso-22-devops-sso-sandbox.pathfinder.gov.bc.ca
 admin_idp: idir
 token_data: placeholder
-
+ldap_host: ldap://idir.bcgov
+ldap_username: IDIR\xxx
+ldap_password: 

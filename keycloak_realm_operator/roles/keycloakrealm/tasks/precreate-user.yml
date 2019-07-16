@@ -1,0 +1,15 @@
+---
+# tasks file for precreate user
+
+- name: Search user GUID with LDAP
+  ldap_search:
+    server_uri: "{{ ldap_host }}"
+    bind_dn: "{{ ldap_username }}"
+    bind_pw: "{{ ldap_password }}"
+    base: "OU=BCGOV,DC=idir,DC=BCGOV"
+    scope: children
+    filter: '(sAMAccountName=shellhan)'
+    attrs: bcgovGUID
+  register: ldap_user_search
+- debug: msg="{{ ldap_user_search.results[0].bcgovGUID }}"
+
