@@ -10,13 +10,13 @@
     headers: 
       Authorization: "Bearer {{ token_data }}"
   register: user_sources
-- name: Check if unique user returned
-  fail: msg="Username not valid or unique."
-  when: ( user_sources.json | length != 1 )
-- name: Set user ID fact
+- name: Set user ID fact when exists
   set_fact:
     user_id: "{{ user_sources.json[0].id | default('') }}"
     user_name: "{{ user_sources.json[0].username | default('') }}"
+- name: Precreate user when not existing
+  include_tasks: precreate-user.yml
+  when: ( user_sources.json | length != 1 )
 # create the user account in the new realm
 - name: Set template parameters fact
   set_fact:
@@ -37,7 +37,7 @@
 # create user
 - name: Read in new json data for user
   set_fact: 
-    user_content: "{{ lookup('template', 'templates/new_user.json.j2') }}"
+    user_content: "{{ lookup('template', 'templates/new_user.json.j2') | tojson}}"
 - name: Create user from template
   uri: 
     url: "{{ keycloak_url }}/auth/admin/realms/{{ realm }}/users"

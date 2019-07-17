@@ -1,4 +1,9 @@
 {
   "username": "{{ new_username }}",
   "enabled": true,
+  {% if guid is defined and guid | length > 0 %}
+    "attributes": {
+      "idir_userid": "{{ guid }}"
+    }
+  {% endif %}
 }
