@@ -14,9 +14,10 @@
   set_fact:
     user_id: "{{ user_sources.json[0].id | default('') }}"
     user_name: "{{ user_sources.json[0].username | default('') }}"
+    is_precreate: "{{ user_sources.json | length != 1 }}"
 - name: Precreate user when not existing
   include_tasks: precreate-user.yml
-  when: ( user_sources.json | length != 1 )
+  when: is_precreate
 # create the user account in the new realm
 - name: Set template parameters fact
   set_fact:
@@ -61,6 +62,7 @@
   set_fact: 
     new_user_id: "{{ user_info.json[0].id | default('') }}"
     new_user_federation_content: "{{ lookup('template', 'templates/user_federation.json.j2') }}"
+# Skip this when pre-creating user:
 - name: Setup new user federated link
   uri: 
     url: "{{ keycloak_url }}/auth/admin/realms/{{ realm }}/users/{{ new_user_id }}/federated-identity/{{ admin_idp }}"
@@ -71,6 +73,7 @@
     status_code: 204
     headers:
       Authorization: "Bearer {{ token_data }}"
+  when: (not is_precreate)
 # Add user to admin group:
 - name: Get Realm Admin Group ID
   uri: 
