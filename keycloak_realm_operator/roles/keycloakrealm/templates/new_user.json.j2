@@ -3,7 +3,8 @@
   "enabled": true,
   {% if guid is defined and guid | length > 0 %}
     "attributes": {
-      "idir_userid": "{{ guid }}"
+      "idir_userid": "{{ guid }}",
+      "idir_user_guid": "{{ guid }}"
     }
   {% endif %}
 }
