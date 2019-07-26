@@ -16,6 +16,14 @@
       "user.attribute": "idir_userid"
     }
   }, {
+    "name": "idir_guid",
+    "identityProviderAlias": "{{ idp_realm_alias }}",
+    "identityProviderMapper": "oidc-user-attribute-idp-mapper",
+    "config": {
+      "claim": "idir_userid",
+      "user.attribute": "idir_user_guid"
+    }
+  }, {
     "name": "username",
     "identityProviderAlias": "{{ idp_realm_alias }}",
     "identityProviderMapper": "oidc-username-idp-mapper",
