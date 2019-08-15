@@ -3,5 +3,10 @@
   connection: local
   vars_files:
     vars/main.yml
-  tasks: 
-    - include_tasks: tasks/main.yml
+  tasks:
+    - name: Create new realms
+      include_tasks: tasks/main.yml
+      with_items: 
+        - "{{ environments }}"
+      loop_control: 
+        loop_var: env
