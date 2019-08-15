@@ -1,0 +1,16 @@
+---
+# tasks file for installing ldap dependencies
+
+- name: Install dependencies
+  apt: name="{{ item }}" state=present
+  with_items:
+    - python-pip
+    - libsasl2-dev
+    - libldap2-dev
+    - libssl-dev
+
+- name: Upgrade pip
+  command: pip install --upgrade pip
+
+- name: Install python-ldap
+  pip: name=python-ldap state=present
