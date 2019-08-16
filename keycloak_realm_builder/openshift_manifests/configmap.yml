@@ -1,4 +1,9 @@
 apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: webhook-ansible-hooks
+  labels:
+    app: webhook-ansible
 data:
   hooks.yml: |-
     - id: webhook
@@ -16,6 +21,9 @@ data:
         name: pull_request.head.repo.owner.login
       - source: payload
         name: pull_request.url
+      - source: payload
+        name: pull_request
+      # https://github.com/adnanh/webhook/blob/master/docs/Hook-Rules.md
       trigger-rule:
         and:
         - match:
@@ -30,6 +38,3 @@ data:
             parameter:
               source: payload
               name: action
-kind: ConfigMap
-metadata:
-  name: webhook-ansible-hooks
