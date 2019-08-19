@@ -22,20 +22,25 @@ data:
       - source: payload
         name: pull_request.url
       - source: payload
-        name: pull_request
-      # https://github.com/adnanh/webhook/blob/master/docs/Hook-Rules.md
-      # TODO: add the rule to check if the label (request-ready) exists
+        name: pull_request.issue_url
       trigger-rule:
         and:
-        - match:
-            type: payload-hash-sha1
-            secret: mysecret
-            parameter:
-              source: header
-              name: X-Hub-Signature
+        # TODO: enable secret check
+        # - match:
+        #     type: payload-hash-sha1
+        #     secret: mysecret
+        #     parameter:
+        #       source: header
+        #       name: X-Hub-Signature
         - match:
             type: value
-            value: opened
+            value: labeled
             parameter:
               source: payload
               name: action
+        - match:
+            type: value
+            value: 0-request-ready
+            parameter:
+              source: payload
+              name: label.name
