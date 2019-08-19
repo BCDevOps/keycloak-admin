@@ -24,6 +24,7 @@ data:
       - source: payload
         name: pull_request
       # https://github.com/adnanh/webhook/blob/master/docs/Hook-Rules.md
+      # TODO: add the rule to check if the label (request-ready) exists
       trigger-rule:
         and:
         - match:
