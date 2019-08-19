@@ -1,0 +1,9 @@
+# Use this task list to label the PR
+- name: Add Failure Label to Pull Request
+  uri: 
+    method: POST
+    url: "{{ pr_label_url }}"
+    headers: 
+      Authorization: "Bearer {{ gh_token }}"
+    body: '{"labels":["{{ failure_label }}"]}'
+# TODO: check when tasks fail

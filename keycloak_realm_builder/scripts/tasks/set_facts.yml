@@ -1,6 +1,12 @@
 # Use this tasklist to set all facts required at the beginning of the playbook run
 - name: Set facts for URL endpoints
-  set_fact: 
+  set_fact:
     "pr_{{ item }}_url": "{{ pull_request_url }}/{{ item }}"
-  with_items: 
+  with_items:
     - merge
+    - files
+
+- name: Set facts for PR labeling
+  set_fact:
+    "pr_label_url": "{{ issue_url }}/labels"
+    "failure_label": "request-failed"

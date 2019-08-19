@@ -11,7 +11,7 @@
 - name: Get list of PR files
   uri: 
     method: GET
-    url: "{{ pull_request_url }}/files"
+    url: "{{ pull_files_url }}"
     headers: 
       Authorization: "Bearer {{ gh_token }}"
     return_content: true

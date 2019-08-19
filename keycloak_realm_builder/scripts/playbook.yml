@@ -8,5 +8,5 @@
   tasks:
     - include_tasks: tasks/set_facts.yml
     - include_tasks: tasks/pr_interrogate.yml
+    - include_tasks: tasks/pr_label.yml
     - include_tasks: tasks/pr_merge_and_close.yml
-
