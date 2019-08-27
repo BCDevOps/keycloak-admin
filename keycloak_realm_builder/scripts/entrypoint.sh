@@ -8,5 +8,7 @@ fi
 
 # Set Env variables from configMap data
 export TOKEN=$(cat /opt/creds/token)
+cat /opt/creds/token
+echo $TOKEN
 
 /opt/webhook -hooks /opt/hooks/hooks.yml -verbose
