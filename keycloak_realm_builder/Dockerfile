@@ -15,4 +15,5 @@ RUN         chgrp -R 0 /opt && \
 
 VOLUME      ["/etc/webhook"]
 EXPOSE      9000
-ENTRYPOINT  ["./entrypoint.sh"]
+# Need to source the script for env var to be available
+ENTRYPOINT  [". ./entrypoint.sh"]
