@@ -12,7 +12,7 @@
   uri: 
     method: GET
     url: "{{ pr_files_url }}"
-    headers: 
+    headers:
       Authorization: "Bearer {{ gh_token }}"
     return_content: true
   register: pr_files
@@ -27,5 +27,16 @@
   when: pr_file_count == 0 ## Fix this - should be 1 but isn't working
 
 - name: Get contents of new file
+  uri: 
+    method: GET
+    url: "{{ pr_files.json[0].contents_url }}"
+    headers:
+      Authorization: "Bearer {{ gh_token }}"
+    return_content: true
+  register: realm_content_encoded
+
+- name: Decode realm content
   set_fact: 
-    realm_content: "{{ lookup('url', '{{ pr_files.json[0].raw_url }}' ) }}"
+    realm_content: "{{ realm_content_encoded.json.content | b64decode }}"
+
+- debug: msg="{{ realm_content }}"
