@@ -1,0 +1,10 @@
+# label failure or close and merge
+
+# Use this task list to determind next action based on the realm creation outcome
+- name: Add failure label if realm not successfully created
+  include_tasks: pr_label.yml
+  when: flow_completed == false
+
+- name: Merge and close request if realm successfully created
+  include_tasks: pr_merge_and_close.yml
+  when: flow_completed == true

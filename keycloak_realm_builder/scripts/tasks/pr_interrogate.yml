@@ -38,5 +38,3 @@
 - name: Decode realm content
   set_fact: 
     realm_content: "{{ realm_content_encoded.json.content | b64decode }}"
-
-- debug: msg="{{ realm_content }}"

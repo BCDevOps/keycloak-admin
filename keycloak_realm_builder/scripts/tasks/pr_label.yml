@@ -5,5 +5,5 @@
     url: "{{ pr_label_url }}"
     headers: 
       Authorization: "Bearer {{ gh_token }}"
-    body: '{"labels":["{{ failure_label }}"]}'
-# TODO: check when tasks fail
+    body: '{ "labels": [ "{{ failure_label }}" ] }'
+    body_format: json
