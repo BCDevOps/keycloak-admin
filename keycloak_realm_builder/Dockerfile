@@ -8,6 +8,9 @@ RUN         curl -L --silent -o webhook.tar.gz https://github.com/adnanh/webhook
 
 COPY        scripts/  .
 
+# Add ldap library
+COPY        library/ldap_search.py /usr/share/ansible/openshift
+
 # Set permissions for OpenShift on webhook artifacts
 RUN         chgrp -R 0 /opt && \
             chmod -R g+rwX /opt && \
