@@ -53,8 +53,8 @@
         {
           "id": 1508561104,
           "node_id": "MDU6TGFiZWwxNTA4NTYxMTA0",
-          "url": "https://api.github.com/repos/bcgov-c/realm-o-matic-records/labels/0-request-ready",
-          "name": "0-request-ready",
+          "url": "https://api.github.com/repos/bcgov-c/realm-o-matic-records/labels/request-ready",
+          "name": "request-ready",
           "color": "ffc6cb",
           "default": false
         },
@@ -375,8 +375,8 @@
     "label": {
       "id": 1508561104,
       "node_id": "MDU6TGFiZWwxNTA4NTYxMTA0",
-      "url": "https://api.github.com/repos/bcgov-c/realm-o-matic-records/labels/0-request-ready",
-      "name": "0-request-ready",
+      "url": "https://api.github.com/repos/bcgov-c/realm-o-matic-records/labels/request-ready",
+      "name": "request-ready",
       "color": "ffc6cb",
       "default": false
     },
