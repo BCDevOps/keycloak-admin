@@ -1,4 +1,5 @@
-FROM        quay.io/operator-framework/ansible-operator:v0.8.1
+FROM        quay.io/operator-framework/ansible-operator:latest
+# FROM        quay.io/operator-framework/ansible-operator:v0.8.1
 ENV         WEBHOOK_VERSION 2.6.9
 USER        0
 WORKDIR     /opt/
