@@ -2,11 +2,21 @@
 - hosts: localhost
   connection: local
   gather_facts: no
-  # Use a local vars file when testing locally; remotely the vars are passed from the webhook.
   # vars_files:
-  #   creds/vars.yml
+    # creds/vars.yml # Use a local vars file when testing locally; remotely the vars are passed from the webhook.
+    # creds/sso_vars.yml
+  vars:
+  - flow_completed: false
   tasks:
-    - include_tasks: tasks/set_facts.yml
-    - include_tasks: tasks/pr_interrogate.yml
-    - include_tasks: tasks/pr_label.yml
-    - include_tasks: tasks/pr_merge_and_close.yml
+    - name: Start Realm Creation
+      block:
+        - name: Setup
+          include_tasks: tasks/set_facts.yml
+        - name: Fetch Realm Info
+          include_tasks: tasks/pr_interrogate.yml
+        - name: Create Realms
+          include_tasks: tasks/realm_creation.yml
+      rescue:
+        - debug:
+            msg: "-------------------Realm Creation Flow Has Failed!-------------------" 
+    - include_tasks: tasks/pr_completion.yml
