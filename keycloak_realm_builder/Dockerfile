@@ -11,6 +11,10 @@ COPY        scripts/  .
 # Add ldap library
 COPY        library/ldap_search.py /usr/share/ansible/openshift
 
+# Install idap dependencies
+RUN         pip install --upgrade pip && \
+            pip install python-ldap
+
 # Set permissions for OpenShift on webhook artifacts
 RUN         chgrp -R 0 /opt && \
             chmod -R g+rwX /opt && \
