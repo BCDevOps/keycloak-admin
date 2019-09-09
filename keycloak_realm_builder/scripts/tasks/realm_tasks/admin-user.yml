@@ -66,11 +66,6 @@
   set_fact: 
     new_user_id: "{{ user_info.json[0].id | default('') }}"
     new_user_federation_content: "{{ lookup('template', 'templates/user_federation.json.j2') }}"
-
-# todo: delete:
-- debug: msg="--------------------{{ new_user_id }}"
-
-
 # Skip this when pre-creating user:
 - name: Setup new user federated link
   uri: 

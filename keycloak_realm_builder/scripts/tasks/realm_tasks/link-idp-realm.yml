@@ -52,7 +52,6 @@
 - name: Set IDP client id fact
   set_fact:
     idp_client_secret: "{{ idp_client_secret_status.json.value | default('') }}"
-- debug: msg="{{idp_client_clientid}}, {{idp_client_secret}}"
 # --------------------TODO: if the IDP exists in the new realm already, delete it
 - name: Render IDP template from input content
   set_fact: 
