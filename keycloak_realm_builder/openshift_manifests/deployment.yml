@@ -96,4 +96,4 @@ parameters:
   displayName: version
   name: VERSION
   required: true
-  value: dev
+  value: v1.0

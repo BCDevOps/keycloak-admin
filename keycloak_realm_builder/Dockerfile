@@ -9,12 +9,15 @@ RUN         curl -L --silent -o webhook.tar.gz https://github.com/adnanh/webhook
 
 COPY        scripts/  .
 
-# Add ldap library
-COPY        library/ldap_search.py /usr/share/ansible/openshift
+# TODO:
+# - Upgrade python version
 
-# Install idap dependencies
-RUN         pip install --upgrade pip && \
-            pip install python-ldap
+# - Install idap dependencies
+# RUN         pip install --upgrade pip && \
+#             pip install python-ldap
+
+# - Add ldap library
+# COPY        library/ldap_search.py /usr/share/ansible/openshift
 
 # Set permissions for OpenShift on webhook artifacts
 RUN         chgrp -R 0 /opt && \

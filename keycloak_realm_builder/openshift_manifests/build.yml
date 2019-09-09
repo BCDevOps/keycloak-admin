@@ -19,12 +19,12 @@ objects:
       local: false
     tags:
     - annotations:
-        openshift.io/imported-from: quay.io/operator-framework/ansible-operator:v0.8.1
+        openshift.io/imported-from: quay.io/operator-framework/ansible-operator:${ANSIBLE_OPERATOR_VERSION}
       from:
         kind: DockerImage
-        name: quay.io/operator-framework/ansible-operator:v0.8.1
+        name: quay.io/operator-framework/ansible-operator:${ANSIBLE_OPERATOR_VERSION}
       importPolicy: {}
-      name: v0.8.1
+      name: ${ANSIBLE_OPERATOR_VERSION}
       referencePolicy:
         type: Source
 - apiVersion: v1
@@ -86,7 +86,7 @@ parameters:
   displayName: version
   name: VERSION
   required: true
-  value: dev
+  value: v1.0
 - description: SOURCE_REPOSITORY_URL
   displayName: SOURCE_REPOSITORY_URL
   name: SOURCE_REPOSITORY_URL
