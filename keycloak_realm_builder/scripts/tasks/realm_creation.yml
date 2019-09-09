@@ -1,12 +1,11 @@
 # Use this task list to create realms in dev, test and prod
-- name: assume creation is successsful
+- name: Create new realms
+  include_tasks: realm_tasks/main.yml
+  with_items: 
+    - "{{ environments }}"
+  loop_control: 
+    loop_var: env
+
+- name: Realm creation is successsful
   set_fact:
     flow_completed: true
-- name: test library access
-  ldap_search:
-    server_uri: "ldap://idir.bcgov"
-    base: "OU=BCGOV,DC=idir,DC=BCGOV"
-    scope: children
-    attrs: bcgovGUID
-  register: ldap_user_search
-- debug: msg="{{ ldap_user_search }}"
