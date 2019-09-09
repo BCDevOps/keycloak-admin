@@ -51,9 +51,13 @@ objects:
             name: webhook-ansible-4
           - mountPath: /opt/hooks
             name: volume-var1j
-          - mountPath: /opt/creds/
+          - mountPath: /opt/creds/token
+            subPath: token
             name: volume-0vqrw
             readOnly: true
+          - mountPath: /opt/creds/sso_vars.yml
+            subPath: sso_vars.yml
+            name: volume-var2k
         dnsPolicy: ClusterFirst
         restartPolicy: Always
         schedulerName: default-scheduler
@@ -72,6 +76,10 @@ objects:
             defaultMode: 420
             name: webhook-ansible-hooks
           name: volume-var1j
+        - configMap:
+            defaultMode: 420
+            name: webhook-ansible-sso-creds
+          name: volume-var2k
         - name: volume-0vqrw
           secret:
             defaultMode: 420
