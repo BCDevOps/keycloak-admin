@@ -33,8 +33,8 @@
     headers:
       Authorization: "Bearer {{ gh_token }}"
     return_content: true
-  register: realm_content_encoded
+  register: realm_data_encoded
 
 - name: Decode realm content
   set_fact: 
-    realm_content: "{{ realm_content_encoded.json.content | b64decode }}"
+    realm_data: "{{ realm_data_encoded.json.content | b64decode }}"
