@@ -2,7 +2,7 @@ FROM        quay.io/operator-framework/ansible-operator:v0.8.1
 
 # Upgrade ansible version:
 USER        1001
-RUN         pip install --upgrade pip
+RUN         sudo pip install --upgrade pip
 RUN         pip install --ignore-installed ansible==2.8.3
 RUN         ansible --version
 
