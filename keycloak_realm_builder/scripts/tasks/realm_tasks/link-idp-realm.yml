@@ -6,8 +6,8 @@
     idp_name_id: { IDIR: idir, GitHub: _github, BCeID: _bceid }
 - name: Set IDP realm ID fact
   set_fact:
-    idp_realm_id: "{{ idp_name_id[idp] }}"
-    idp_realm_alias: "{{ idp | lower }}"
+    idp_realm_id: "{{ idp_name_id[idp_name] }}"
+    idp_realm_alias: "{{ idp_name | lower }}"
 - name: Set template parameters fact
   set_fact:
     redirect_url: "{{ keycloak_url }}/auth/realms/{{ realm }}/broker/{{ idp_realm_alias }}/endpoint*"
@@ -56,7 +56,7 @@
 - name: Render IDP template from input content
   set_fact: 
     idp_content: "{{ lookup('template', 'templates/{{ idp_realm_id }}/idp.keycloak-oidc.json.j2') }}"
-- name: Create IDP {{ idp }}
+- name: Create IDP {{ idp_name }}
   uri:
     url: "{{ keycloak_url }}/auth/admin/realms/{{ realm }}/identity-provider/instances"
     method: POST
@@ -69,7 +69,7 @@
 - name: Read in array of mappers
   set_fact: 
     mapper_content_array: "{{ lookup('template', 'templates/{{ idp_realm_id }}/mappers.json.j2') }}"
-- name: Create mapper in IDP {{ idp }}
+- name: Create mapper in IDP {{ idp_name }}
   uri: 
     url: "{{ keycloak_url }}/auth/admin/realms/{{ realm }}/identity-provider/instances/{{ idp_realm_alias }}/mappers"
     method: POST
