@@ -10,3 +10,5 @@
   set_fact:
     "pr_label_url": "{{ issue_url }}/labels"
     "failure_label": "request-failed"
+    "realm_complete_label": "realm-created"
+    "bceid_complete_label": "bceid-enabled"
