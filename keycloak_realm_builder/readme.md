@@ -1,10 +1,7 @@
 # keycloak realm builder
-This containerized application will run on OpenShift / Kubernetes and will: 
-- Receive a GitHub Pull Request payload
-- Run an Ansible playbook that: 
-  - Gets the keycloak realm configuration json from the PR
-  - Configure the realm with the appropriate settings
-  - Close and merge the GitHub Pull Request
+This containerized application will run on OpenShift / Kubernetes and consists of two parts: 
+- Ansible Webhook, that receives a GitHub Pull Request payload
+- Absible playbook that creates Keycloak Realms (see scripts/readme.md for details)
 
 
 ## Webhook Configuration
