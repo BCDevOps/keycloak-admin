@@ -23,6 +23,8 @@ data:
         name: pull_request.url
       - source: payload
         name: pull_request.issue_url
+      - source: payload
+        name: label.name
       trigger-rule:
         and:
         # - match:
@@ -37,9 +39,17 @@ data:
             parameter:
               source: payload
               name: action
-        - match:
-            type: value
-            value: request-ready
-            parameter:
-              source: payload
-              name: label.name
+        # Match either one of the following labels:
+        - or:
+          - match:
+              type: value
+              value: request-ready
+              parameter:
+                source: payload
+                name: label.name
+          - match:
+              type: value
+              value: bceid-approved
+              parameter:
+                source: payload
+                name: label.name
