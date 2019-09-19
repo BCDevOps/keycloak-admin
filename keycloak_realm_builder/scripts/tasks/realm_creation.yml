@@ -6,6 +6,11 @@
   loop_control: 
     loop_var: env
 
-- name: Realm creation is successsful
+- name: Keycloak flow completed
   set_fact:
     flow_completed: true
+
+- name: Add Complete label to the PR
+  include_tasks: pr_label.yml
+  vars:
+  - add_label_name: "{{ realm_complete_label }}"
