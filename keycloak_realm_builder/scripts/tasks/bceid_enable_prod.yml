@@ -6,7 +6,7 @@
     keycloak_client_secret: "{{ prod_keycloak_client_secret }}"
 
 - name: Get access token
-  include_tasks: access-token.yml
+  include_tasks: realm_tasks/access-token.yml
 
 - name: Enable BCeID IDP in prod
   include_tasks: realm_tasks/link-idp-realm.yml
@@ -21,4 +21,4 @@
 - name: Add BCeID_Complete label to the PR
   include_tasks: pr_label.yml
   vars:
- - add_label_name: "{{ bceid_complete_label }}"
+  - add_label_name: "{{ bceid_complete_label }}"
