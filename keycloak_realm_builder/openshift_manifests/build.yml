@@ -96,8 +96,7 @@ parameters:
   displayName: SOURCE_REPOSITORY_REF
   name: SOURCE_REPOSITORY_REF
   required: true
-  value: keycloak_realm_builder
-# TODO: update ref 
+  value: master
 - description: SOURCE_CONTEXT_DIR
   displayName: SOURCE_CONTEXT_DIR
   name: SOURCE_CONTEXT_DIR
