@@ -1,0 +1,21 @@
+---
+- hosts: localhost
+  connection: local
+  gather_facts: no
+  vars_files:
+    sso_vars.yml
+  vars:
+    - realm_name: "{{ realm_name }}"
+    # Update this list if the IDPs do not apply:
+    - idps:
+      - GitHub
+      - IDIR
+      - BCeID
+      # - BCSC
+  tasks:
+    - name: Delete all three realms
+      include_tasks: tasks/main.yml
+      with_items: 
+        - "{{ environments }}"
+      loop_control: 
+        loop_var: env
