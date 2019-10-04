@@ -1,0 +1,16 @@
+# Use this task list to create realms in dev, test and prod
+- name: Create new realms
+  include_tasks: realm_tasks/main.yml
+  with_items: 
+    - "{{ environments }}"
+  loop_control: 
+    loop_var: env
+
+- name: Keycloak flow completed
+  set_fact:
+    flow_completed: true
+
+- name: Add Complete label to the PR
+  include_tasks: pr_label.yml
+  vars:
+  - add_label_name: "{{ realm_complete_label }}"

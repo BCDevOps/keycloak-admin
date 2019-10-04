@@ -1,0 +1,40 @@
+---
+# tasks file for keycloak realm
+- name: Setup keycloak variables for the environment
+  set_fact: 
+    keycloak_url: "{{ lookup('vars', env + '_keycloak_url') }}"
+    keycloak_client_id: "{{ lookup('vars', env + '_keycloak_client_id') }}"
+    keycloak_client_secret: "{{ lookup('vars', env + '_keycloak_client_secret') }}"
+
+- name: Get access token
+  include_tasks: access-token.yml
+
+- name: Create new realm
+  include_tasks: create-realm.yml
+
+- name: Update access token
+  include_tasks: access-token.yml
+
+# --------------------TODO: Update Realm Reviewer
+# --------------------TODO: Disabling `Review Profile` on `First Broker Login`
+
+# Link to IDP Realms, separately for each ID
+# NOTE: BCeID will not be enabled in Production
+- name: Link to IDP Realms
+  include_tasks: link-idp-realm.yml
+  vars:
+  - realm: "{{ realm_data.realm.id }}"
+  with_items: "{{ realm_data.realm.idps }}"
+  loop_control:
+    loop_var: idp_name
+  when: env != "prod" or idp_name != "BCeID"
+
+- name: Update access token
+  include_tasks: access-token.yml
+
+# Add admin user
+- name: Add admin user
+  include_tasks: admin-user.yml
+  vars:
+  - realm: "{{ realm_data.realm.id }}"
+  - admin_username: "{{ realm_data.realm.adminUser }}"

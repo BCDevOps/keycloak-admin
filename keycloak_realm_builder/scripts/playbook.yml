@@ -1,0 +1,31 @@
+---
+- hosts: localhost
+  connection: local
+  gather_facts: no
+  vars_files:
+    # creds/vars.yml # Use a local vars file when testing locally; remotely the vars are passed from the webhook.
+    creds/sso_vars.yml
+  vars:
+  - flow_completed: false
+  - realm_data: null
+  tasks:
+    - name: Start Work Flow
+      block:
+        - name: Setup
+          include_tasks: tasks/set_facts.yml
+        - name: Fetch Realm Info
+          include_tasks: tasks/pr_interrogate.yml
+        - name: Create Realms
+          include_tasks: tasks/realm_creation.yml
+          when: label_name == "request-ready"
+        - name: Enable Prod BCeID
+          include_tasks: tasks/bceid_enable_prod.yml
+          when: label_name == "bceid-approved"
+      rescue:
+        - debug:
+            msg: "-------------------Something Failed!-------------------"
+        - name: Add failure label when Keycloak tasks are not completed
+          include_tasks: tasks/pr_label.yml
+          vars:
+          - add_label_name: "{{ failure_label }}"
+          when: flow_completed == false

@@ -1,0 +1,24 @@
+# Use this task list to enable BCeID IDP in production
+- name: Setup keycloak variables for the environment
+  set_fact: 
+    keycloak_url: "{{ prod_keycloak_url }}"
+    keycloak_client_id: "{{ prod_keycloak_client_id}}"
+    keycloak_client_secret: "{{ prod_keycloak_client_secret }}"
+
+- name: Get access token
+  include_tasks: realm_tasks/access-token.yml
+
+- name: Enable BCeID IDP in prod
+  include_tasks: realm_tasks/link-idp-realm.yml
+  vars:
+  - idp_name: "BCeID"
+  - realm: "{{ realm_data.realm.id }}"
+
+- name: Keycloak flow completed
+  set_fact:
+    flow_completed: true
+
+- name: Add BCeID_Complete label to the PR
+  include_tasks: pr_label.yml
+  vars:
+  - add_label_name: "{{ bceid_complete_label }}"

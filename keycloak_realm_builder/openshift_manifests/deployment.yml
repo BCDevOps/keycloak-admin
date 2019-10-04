@@ -1,0 +1,107 @@
+apiVersion: v1
+kind: Template
+metadata:
+  name: ${NAME}
+objects:
+- apiVersion: apps.openshift.io/v1
+  kind: DeploymentConfig
+  metadata:
+    labels:
+      app: ${NAME}
+    name: ${NAME}
+  spec:
+    replicas: 1
+    selector:
+      app: ${NAME}
+      deploymentconfig: ${NAME}
+    strategy:
+      activeDeadlineSeconds: 21600
+      resources: {}
+      rollingParams:
+        intervalSeconds: 1
+        maxSurge: 25%
+        maxUnavailable: 25%
+        timeoutSeconds: 600
+        updatePeriodSeconds: 1
+      type: Rolling
+    template:
+      metadata:
+        creationTimestamp: null
+        labels:
+          app: ${NAME}
+          deploymentconfig: ${NAME}
+      spec:
+        containers:
+        - image: docker-registry.default.svc:5000/${NAMESPACE}/${NAME}:${VERSION}
+          name: ${NAME}
+          ports:
+          - containerPort: 9000
+            protocol: TCP
+          resources: {}
+          terminationMessagePath: /dev/termination-log
+          terminationMessagePolicy: File
+          volumeMounts:
+          - mountPath: /etc/webhook
+            name: webhook-ansible-1
+          - mountPath: /runner/artifacts
+            name: webhook-ansible-2
+          - mountPath: /runner/inventory
+            name: webhook-ansible-3
+          - mountPath: /runner/project
+            name: webhook-ansible-4
+          - mountPath: /opt/hooks
+            name: volume-var1j
+          - mountPath: /opt/creds/token
+            subPath: token
+            name: volume-0vqrw
+            readOnly: true
+          - mountPath: /opt/creds/sso_vars.yml
+            subPath: sso_vars.yml
+            name: volume-var2k
+        dnsPolicy: ClusterFirst
+        restartPolicy: Always
+        schedulerName: default-scheduler
+        securityContext: {}
+        terminationGracePeriodSeconds: 30
+        volumes:
+        - emptyDir: {}
+          name: webhook-ansible-1
+        - emptyDir: {}
+          name: webhook-ansible-2
+        - emptyDir: {}
+          name: webhook-ansible-3
+        - emptyDir: {}
+          name: webhook-ansible-4
+        - configMap:
+            defaultMode: 420
+            name: webhook-ansible-hooks
+          name: volume-var1j
+        - configMap:
+            defaultMode: 420
+            name: webhook-ansible-sso-creds
+          name: volume-var2k
+        - name: volume-0vqrw
+          secret:
+            defaultMode: 420
+            secretName: gh-webhook-ansible
+    test: false
+parameters:
+- description: A name used for all objects
+  displayName: Name
+  name: NAME
+  required: true
+  value: webhook-ansible
+- description: Namespace for base image
+  displayName: NAMESPACE
+  name: NAMESPACE
+  required: true
+  value: devops-sso-tools
+- description: A name suffix used for all objects
+  displayName: Suffix
+  name: SUFFIX
+  required: false
+- description: A version used for the image tags
+  displayName: version
+  name: VERSION
+  required: true
+  value: v1.0

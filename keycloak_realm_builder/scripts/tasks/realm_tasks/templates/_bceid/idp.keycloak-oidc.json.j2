@@ -1,0 +1,25 @@
+{
+  "alias": "{{ idp_realm_alias }}",
+  "displayName": "{{ idp_name }}",
+  "providerId": "keycloak-oidc",
+  "enabled": true,
+  "trustEmail": false,
+  "storeToken": false,
+  "addReadTokenRoleOnCreate": false,
+  "authenticateByDefault": false,
+  "linkOnly": false,
+  "firstBrokerLoginFlowAlias": "first broker login",
+  "config": {
+    "validateSignature": "true",
+    "userInfoUrl": "{{ keycloak_url }}/auth/realms/{{ idp_realm_id }}/protocol/openid-connect/userinfo",
+    "tokenUrl": "{{ keycloak_url }}/auth/realms/{{ idp_realm_id }}/protocol/openid-connect/token",
+    "clientId": "{{ idp_client_clientid }}",
+    "authorizationUrl": "{{ keycloak_url }}/auth/realms/{{ idp_realm_id }}/protocol/openid-connect/auth",
+    "jwksUrl": "{{ keycloak_url }}/auth/realms/{{ idp_realm_id }}/protocol/openid-connect/certs",
+    "logoutUrl": "{{ keycloak_url }}/auth/realms/{{ idp_realm_id }}/protocol/openid-connect/logout",
+    "clientSecret": "{{ idp_client_secret }}",
+    "backchannelSupported": "true",
+    "issuer": "{{ keycloak_url }}/auth/realms/{{ idp_realm_id }}",
+    "useJwksUrl": "true"
+  }
+}

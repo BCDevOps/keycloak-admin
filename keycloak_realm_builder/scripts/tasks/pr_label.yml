@@ -1,0 +1,9 @@
+# Use this task list to label a PR
+- name: Add a Label to a Pull Request
+  uri: 
+    method: POST
+    url: "{{ pr_label_url }}"
+    headers: 
+      Authorization: "Bearer {{ gh_token }}"
+    body: '{ "labels": [ "{{ add_label_name }}" ] }'
+    body_format: json

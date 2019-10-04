@@ -1,0 +1,55 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: webhook-ansible-hooks
+  labels:
+    app: webhook-ansible
+data:
+  hooks.yml: |-
+    - id: webhook
+      execute-command: /opt/run-playbook.sh
+      command-working-directory: /opt
+      response-message: I got the payload!
+      pass-arguments-to-command:
+      - source: payload
+        name: pull_request.head.repo.html_url
+      - source: payload
+        name: pull_request.head.ref
+      - source: payload
+        name: number
+      - source: payload
+        name: pull_request.head.repo.owner.login
+      - source: payload
+        name: pull_request.url
+      - source: payload
+        name: pull_request.issue_url
+      - source: payload
+        name: label.name
+      trigger-rule:
+        and:
+        # - match:
+        #     type: payload-hash-sha1
+        #     secret: mysecret
+        #     parameter:
+        #       source: header
+        #       name: X-Hub-Signature
+        - match:
+            type: value
+            value: labeled
+            parameter:
+              source: payload
+              name: action
+        # Match either one of the following labels:
+        - or:
+          - match:
+              type: value
+              value: request-ready
+              parameter:
+                source: payload
+                name: label.name
+          - match:
+              type: value
+              value: bceid-approved
+              parameter:
+                source: payload
+                name: label.name

@@ -1,0 +1,22 @@
+---
+# tasks file for precreate user
+
+# TODO: not ready until python upgrade:
+
+# - name: Search user GUID with LDAP
+#   ldap_search:
+#     server_uri: "{{ ldap_host }}"
+#     bind_dn: "{{ ldap_username }}"
+#     bind_pw: "{{ ldap_password }}"
+#     base: "OU=BCGOV,DC=idir,DC=BCGOV"
+#     scope: children
+#     filter: "(sAMAccountName={{ admin_username }})"
+#     attrs: bcgovGUID
+#   register: ldap_user_search
+# - name: Check if IDIR user exists in AD
+#   fail: msg="Username provided does not exist in AD."
+#   when: ( ldap_user_search.results | length != 1 )
+# - name: Set IDIR user GUID fact
+#   set_fact:
+#     guid: "{{ ldap_user_search.results[0].bcgovGUID | default('') }}"
+#     user_name: "{{ admin_username }}"
