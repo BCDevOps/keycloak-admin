@@ -1,0 +1,23 @@
+{
+  "name": "keycloak-admin",
+  "version": "1.0.0",
+  "description": "``` ./kc-curl.sh test -sX GET 'https://sso-test.pathfinder.gov.bc.ca/auth/admin/realms/tfrs/authentication/flows/first%20broker%20login/executions' | jq -r '.[] | select (.providerId == \"idp-review-profile\") | .authenticationConfig'",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/cvarjao/keycloak-admin.git"
+  },
+  "author": "Clecio Varjao",
+  "license": "Apache-2.0",
+  "bugs": {
+    "url": "https://github.com/cvarjao/keycloak-admin/issues"
+  },
+  "homepage": "https://github.com/cvarjao/keycloak-admin#readme",
+  "dependencies": {
+    "axios": "^0.18.0",
+    "ldapjs": "^1.0.2"
+  }
+}
