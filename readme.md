@@ -14,3 +14,6 @@ KEYCLOAK_CLIENT_REALM=<realm where the client is>
 KEYCLOAK_CLIENT_ID=<client id>
 KEYCLOAK_CLIENT_SECRET=<client secret>
 ```
+
+## clean-up-realms
+The keycloak realm remover is an Ansible Playbook that deletes realm and its linked Identity Providers. This [readme](clean-up-realms/README.md) contains more details.

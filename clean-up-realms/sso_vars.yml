@@ -1,0 +1,29 @@
+---
+# vars file for keycloak realm removal:
+environments: 
+  - dev
+  - test
+  - prod
+# ----dev----
+dev_keycloak_client_id: 
+dev_keycloak_url: 
+dev_keycloak_client_secret: 
+# ----test----
+test_keycloak_client_id: 
+test_keycloak_url: 
+test_keycloak_client_secret: 
+# ----prod----
+prod_keycloak_client_id: 
+prod_keycloak_url: 
+prod_keycloak_client_secret: 
+# ----sandbox----
+sbox_keycloak_client_id: 
+sbox_keycloak_url: 
+sbox_keycloak_client_secret:
+
+# ---access token placeholder----
+token_data: placeholder
+# ----BCGOV IDP conventions----
+idir_realm: idir
+github_realm: _github
+bceid_realm: _bceid

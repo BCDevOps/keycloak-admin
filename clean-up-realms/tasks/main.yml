@@ -1,0 +1,19 @@
+---
+# tasks file for keycloakrealm
+- name: Setup keycloak variables for the environment
+  set_fact: 
+    keycloak_url: "{{ lookup('vars', env + '_keycloak_url') }}"
+    keycloak_client_id: "{{ lookup('vars', env + '_keycloak_client_id') }}"
+    keycloak_client_secret: "{{ lookup('vars', env + '_keycloak_client_secret') }}"
+
+- name: Get access token
+  include_tasks: access-token.yml
+
+- name: Delete realm
+  include_tasks: delete-realm.yml
+
+- name: Delete Link to IDP Realms
+  include_tasks: delete-idp-link.yml
+  with_items: "{{ idps }}"
+  loop_control:
+    loop_var: idp_name
