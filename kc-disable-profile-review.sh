@@ -28,7 +28,7 @@ REALM_NAME="$2"
 
 #exit 1
 
-export KEYCLOAK_ACCESS_TOKEN=$(curl -sX POST -u "$KEYCLOAK_CLIENT_ID:$KEYCLOAK_CLIENT_SECRET" "$KEYCLOAK_URL/realms/master/protocol/openid-connect/token" -H "Content-Type: application/x-www-form-urlencoded" -d 'grant_type=client_credentials' -d 'client_id=admin-cli' | jq -r '.access_token')
+export KEYCLOAK_ACCESS_TOKEN=$(curl -sX POST -u "$KEYCLOAK_CLIENT_ID:$KEYCLOAK_CLIENT_SECRET" "$KEYCLOAK_URL/realms/master/protocol/openid-connect/token" -H "Content-Type: application/x-www-form-urlencoded" -d 'grant_type=client_credentials' -d "client_id=$KEYCLOAK_CLIENT_ID" | jq -r '.access_token')
 
 echo "Disabling 'Review Profile' on 'First Broker Login' in '${REALM_NAME}' Realm"
 CONFIG_ID="$(curl -H "Authorization: Bearer $KEYCLOAK_ACCESS_TOKEN" -sX GET "${KEYCLOAK_URL}/admin/realms/${REALM_NAME}/authentication/flows/first%20broker%20login/executions" | jq -r '.[] | select (.providerId == "idp-review-profile") | .authenticationConfig')"
