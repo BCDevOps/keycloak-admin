@@ -1,0 +1,9 @@
+{
+    "name": "email",
+    "identityProviderAlias": "#{IDP_ALIAS}",
+    "identityProviderMapper": "oidc-user-attribute-idp-mapper",
+    "config": {
+        "claim": "email",
+        "user.attribute": "email"
+    }
+}

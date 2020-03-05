@@ -1,0 +1,9 @@
+{
+    "name": "idir_userid",
+    "identityProviderAlias": "#{IDP_ALIAS}",
+    "identityProviderMapper": "oidc-user-attribute-idp-mapper",
+    "config": {
+        "claim": "idir_userid",
+        "user.attribute": "idir_userid"
+    }
+}
