@@ -33,4 +33,5 @@ realms/
 *creds*
 
 # nodejs env var
+.env-*
 .env

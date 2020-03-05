@@ -2,7 +2,8 @@
 
 const dotenv = require('dotenv');
 
-dotenv.config();
+// setup KC env file
+dotenv.config({ path: `.env-${process.env.KC_ENV}` });
 
 const KC_CONFIG = {
   REQUEST: {
@@ -10,7 +11,7 @@ const KC_CONFIG = {
     realmName: process.env.MASTER_REALM_NAME,
     requestConfig: {
       /* Axios request config options https://github.com/axios/axios#request-config */
-      headers: {'Content-Type': 'application/x-www-form-urlencoded',},
+      headers: {'Content-Type': 'application/x-www-form-urlencoded'},
     },
   },
   AUTH: {
