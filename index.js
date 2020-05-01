@@ -4,8 +4,7 @@ const kcAdmin = require('keycloak-admin').default;
 const fs = require('fs-extra');
 
 const { migrateService } = require('./libs/service-migration');
-const { getRealmSettings } = require('./libs/realms');
-const { getAllRealms, getRealmAdmins } = require('./libs/get-realms');
+const { getAllRealms, getRealmAdmins, getRealmSettings } = require('./libs/get-realms');
 const { KC_CONFIG, KC_TERMS } = require('./constants');
 
 const main = async () => {

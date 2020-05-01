@@ -78,7 +78,7 @@ const getRealmAdmins = async (kcAdminClient) => {
  * - idp-mappers
  * - auth flows
  */
-const getRealmSetting = async (kcAdminClient, realmName = KC_CONFIG.REALM.NAME) => {
+const getRealmSettings = async (kcAdminClient, realmName = KC_CONFIG.REALM.NAME) => {
   try {
     //  realm:
     const outputPath = `./output/${realmName}`;
@@ -115,4 +115,4 @@ const getRealmSetting = async (kcAdminClient, realmName = KC_CONFIG.REALM.NAME) 
     throw e;
   }
 };
-module.exports = { getAllRealms, getRealmAdmins, getRealmSetting };
+module.exports = { getAllRealms, getRealmAdmins, getRealmSettings };
