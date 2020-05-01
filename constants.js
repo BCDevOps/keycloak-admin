@@ -19,13 +19,14 @@ const KC_CONFIG = {
       password: process.env.KEYCLOAK_ADMIN_USER_PASSWORD,
       grantType: process.env.KEYCLOAK_GRANT_TYPE,
       clientId: process.env.KEYCLOAK_CLIENT_ID,
-      // otpCode: process.env.OTP_CODE,
+      totp: process.env.OTP_CODE,
   },
   REALM: {
     NAME: process.env.REALM_NAME,
   },
 };
 
+// Identity provider realms reference:
 const IDP_REF = {
   GITHUB: {
     ALIAS: 'github',
@@ -45,6 +46,15 @@ const IDP_REF = {
   },
 };
 
+const KC_TERMS = {
+  ADMIN_GROUP_NAME: 'Realm Administrator',
+  ADMIN_CLIENT_NAME: 'realm-management',
+  IMPERSONATION_ROLE: 'impersonation',
+};
+
+/**
+ * The following constants will be used during service migration:
+ */
 const KC_MIGRATION_ROUTES = {
   NEW: process.env.NEW_KC,
   OLD: process.env.OLD_KC,
@@ -52,4 +62,4 @@ const KC_MIGRATION_ROUTES = {
 
 const CLIENT_MIGRATION_FIELDS = ['id', 'clientId', 'redirectUris'];
 
-module.exports = { KC_MIGRATION_ROUTES, IDP_REF, CLIENT_MIGRATION_FIELDS, KC_CONFIG };
+module.exports = { KC_MIGRATION_ROUTES, IDP_REF, CLIENT_MIGRATION_FIELDS, KC_CONFIG, KC_TERMS };
