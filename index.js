@@ -1,9 +1,11 @@
 'use strict';
 
 const kcAdmin = require('keycloak-admin').default;
-const { migrateService } = require('./libs/service-migration');
-const { KC_CONFIG } = require('./constants');
+const fs = require('fs-extra');
 
+const { migrateService } = require('./libs/service-migration');
+const { getAllRealms, getRealmAdmins, getRealmSettings } = require('./libs/get-realms');
+const { KC_CONFIG, KC_TERMS } = require('./constants');
 
 const main = async () => {
   try {
@@ -15,7 +17,15 @@ const main = async () => {
     //   realmName: KC_CONFIG.REALM.NAME,
     // });
 
-    await migrateService(kcAdminClient);
+    // SSO service migration:
+    // await migrateService(kcAdminClient);
+
+    // Backup realm settings:
+    // await getRealmSettings(kcAdminClient, KC_CONFIG.REALM.NAME);
+
+    // Disable impersonation role:
+    // await deleteClientRole(KC_TERMS.IMPERSONATION_ROLE, false);
+    
   } catch (err) {
     if (err.response) console.error(err.response.statusText);
     else console.error(err);
