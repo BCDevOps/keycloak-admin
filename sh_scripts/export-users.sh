@@ -16,21 +16,21 @@ if [ "$1" == "" ]; then
     exit 1
 fi
 
-source "setenv-$1.sh"
-
 #Example of variables that must be set in setenv.sh. CAREFUL: DO NOT commit setenv.sh!!!
 #KEYCLOAK_URL=https://sso-dev.pathfinder.gov.bc.ca/auth
 #KEYCLOAK_CLIENT_ID=remote-admin-client
 #KEYCLOAK_CLIENT_SECRET=
+#REALM_NAME=
 
-
+source "setenv-$1.sh"
 
 ENV_NAME="$1"
 
 export KEYCLOAK_ACCESS_TOKEN=$(curl -sX POST -u "$KEYCLOAK_CLIENT_ID:$KEYCLOAK_CLIENT_SECRET" "$KEYCLOAK_URL/realms/master/protocol/openid-connect/token" -H "Content-Type: application/x-www-form-urlencoded" -d 'grant_type=client_credentials' -d "client_id=$KEYCLOAK_CLIENT_ID" | jq -r '.access_token')
 
 mkdir -p output
-curl -sX GET "$KEYCLOAK_URL/admin/realms" -H "Accept: application/json" -H "Authorization: Bearer $KEYCLOAK_ACCESS_TOKEN"  -o "output/realms.${ENV_NAME}.json"
-jq -r '.[] | [.id, .displayName, .identityProviders[]?.alias] | @csv' "output/realms.${ENV_NAME}.json" > "output/realms.${ENV_NAME}.txt"
-# checking on the theme usage:
-# jq -r '.[] | [.id, .loginTheme, .emailTheme] | @csv' "output/realms.${ENV_NAME}.json" > "output/realms-theme.${ENV_NAME}.txt"
+
+echo "Start fetching users in realm $REALM_NAME"
+curl -sX GET "$KEYCLOAK_URL/admin/realms/$REALM_NAME/users?max=1000" -H "Accept: application/json" -H "Authorization: Bearer $KEYCLOAK_ACCESS_TOKEN"  -o "output/users.${ENV_NAME}-${REALM_NAME}.json"
+# checking in empty email user:
+# jq -r '.[] | select(.email == "" or .email == null) | [.username, .email]' "output/users.${ENV_NAME}-${REALM_NAME}.json" > "output/users.${ENV_NAME}-${REALM_NAME}.empty-email.txt"

@@ -31,7 +31,7 @@ TARGET_GROUP_URL_ENCODED="${TARGET_GROUP// /%20}"
 TEMPLATES_DIR="${SCRIPT_DIR}/templates"
 CACHE_DIR="${SCRIPT_DIR}/cache"
 
-export KEYCLOAK_ACCESS_TOKEN=$(curl -sX POST -u "$KEYCLOAK_CLIENT_ID:$KEYCLOAK_CLIENT_SECRET" "$KEYCLOAK_URL/realms/master/protocol/openid-connect/token" -H "Content-Type: application/x-www-form-urlencoded" -d 'grant_type=client_credentials' -d 'client_id=admin-cli' | jq -r '.access_token')
+export KEYCLOAK_ACCESS_TOKEN=$(curl -sX POST -u "$KEYCLOAK_CLIENT_ID:$KEYCLOAK_CLIENT_SECRET" "$KEYCLOAK_URL/realms/master/protocol/openid-connect/token" -H "Content-Type: application/x-www-form-urlencoded" -d 'grant_type=client_credentials' -d "client_id=$KEYCLOAK_CLIENT_ID" | jq -r '.access_token')
 
 curl -sSX GET -G -H "Authorization: Bearer $KEYCLOAK_ACCESS_TOKEN" "$KEYCLOAK_URL/admin/realms/${TARGET_REALM}/users" --data-urlencode "username=${TARGET_USERNAME_URL_ENCODED}" | jq "[.[] | select(.username == \"${TARGET_USERNAME//\\/\\\\}\")]" > $CACHE_DIR/users.target.json
 curl -sSX GET -G -H "Authorization: Bearer $KEYCLOAK_ACCESS_TOKEN" "$KEYCLOAK_URL/admin/realms/${TARGET_REALM}/groups" --data-urlencode "search=${TARGET_GROUP}" > $CACHE_DIR/groups.target.json
