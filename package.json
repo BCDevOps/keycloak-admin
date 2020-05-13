@@ -1,0 +1,30 @@
+{
+  "name": "rh-sso-admin",
+  "version": "1.0.0",
+  "description": "This is the Nodejs version of the RH-SSO KeyCloak admin scripts",
+  "main": "index.js",
+  "scripts": {
+    "kc-sbox": "KC_ENV=sbox node index.js",
+    "kc-dev": "KC_ENV=dev node index.js",
+    "kc-test": "KC_ENV=test node index.js",
+    "kc-prod": "KC_ENV=prod node index.js",
+    "test": "``` ./kc-curl.sh test -sX GET 'https://sso-test.pathfinder.gov.bc.ca/auth/admin/realms/tfrs/authentication/flows/first%20broker%20login/executions' | jq -r '.[] | select (.providerId == \"idp-review-profile\") | .authenticationConfig'"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/cvarjao/keycloak-admin.git"
+  },
+  "author": "Clecio Varjao",
+  "license": "Apache-2.0",
+  "bugs": {
+    "url": "https://github.com/cvarjao/keycloak-admin/issues"
+  },
+  "homepage": "https://github.com/cvarjao/keycloak-admin#readme",
+  "dependencies": {
+    "axios": "^0.18.1",
+    "dotenv": "^8.2.0",
+    "fs-extra": "^8.1.0",
+    "keycloak-admin": "^1.13.0",
+    "ldapjs": "^1.0.2"
+  }
+}

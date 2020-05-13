@@ -24,10 +24,14 @@ hs_err_pid*
 .DS_Store
 cache
 setenv-*.sh
-output/
+*output/
 
 node_modules/
 realms/
 
 # Creds
 *creds*
+
+# nodejs env var
+.env-*
+.env
