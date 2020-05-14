@@ -15,7 +15,6 @@
           "query-realms",
           "query-groups",
           "manage-authorization",
-          "impersonation",
           "query-clients",
           "manage-realm",
           "manage-clients",
