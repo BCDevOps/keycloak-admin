@@ -26,6 +26,12 @@ const KC_CONFIG = {
   },
 };
 
+// TODO: move to configmap
+const MASTER_REF = {
+  ALIAS: 'master',
+  REALM: 'master',
+};
+
 // Identity provider realms reference:
 const IDP_REF = {
   GITHUB: {
@@ -62,4 +68,4 @@ const KC_MIGRATION_ROUTES = {
 
 const CLIENT_MIGRATION_FIELDS = ['id', 'clientId', 'redirectUris'];
 
-module.exports = { KC_MIGRATION_ROUTES, IDP_REF, CLIENT_MIGRATION_FIELDS, KC_CONFIG, KC_TERMS };
+module.exports = { KC_MIGRATION_ROUTES, MASTER_REF, IDP_REF, CLIENT_MIGRATION_FIELDS, KC_CONFIG, KC_TERMS };
