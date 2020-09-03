@@ -58,15 +58,14 @@ const updateAppRealmIdp = async (appRealmName, idp, kcAdminClient, newRoute, old
  * @param {String} newRoute new sso host name
  * @param {String} oldRoute current sso host name
  */
-const updateIdpAppClient = async (appRealmName, idp, kcAdminClient, newRoute, oldRoute) => {  
+const updateIdpAppClient = async (clientId, idp, kcAdminClient, newRoute, oldRoute) => {  
   try {    
     // github example:
-    const targetRealm = appRealmName;
     const targetIdp = IDP_REF[idp];
 
     // client ID format: https://${SSO_ROUTE}/auth/realms/${APP_REALM}
     let idpClientRef = {
-      clientId: `https://${oldRoute}/auth/realms/${targetRealm}`,
+      clientId,
       realm: targetIdp.REALM,
     };
 
@@ -82,9 +81,13 @@ const updateIdpAppClient = async (appRealmName, idp, kcAdminClient, newRoute, ol
         if (key === 'redirectUris') {
           if (value.length === 0) throw Error(`No redirect uri found!`);
           if (value.length !== 1) console.log(`Multiple redirect uris found: ${value}`);
+
           // keep both new and old redirect URIs so that team could migrate without breaking it:
           // value.push(value[0].replace(replacer, newRoute));
-          const newRedirectUri = `https://${newRoute}/auth/realms/${targetRealm}/broker/${targetIdp.ALIAS}/endpoint*`;
+          // const newRedirectUri = `https://${newRoute}/auth/realms/${targetRealm}/broker/${targetIdp.ALIAS}/endpoint*`;
+          const newIdpClientId = urlReplacer(clientId, oldRoute, newRoute);
+          const newRedirectUri = `${newIdpClientId}/broker/${targetIdp.ALIAS}/endpoint*`;
+
           value.push(newRedirectUri);
         } else if (key === 'id') {
           idpClientRef[key] = value;
@@ -106,4 +109,4 @@ const updateIdpAppClient = async (appRealmName, idp, kcAdminClient, newRoute, ol
   }
 }
 
-module.exports = { updateIdpAppClient, updateAppRealmIdp };
+module.exports = { urlReplacer, updateIdpAppClient, updateAppRealmIdp };
