@@ -61,6 +61,14 @@ const IDP_TERMS = [
   },
 ];
 
+const IDP_MAPPER_TYPES = ['saml-username-idp-mapper', 'saml-user-attribute-idp-mapper'];
+
+const IDP_USER_ATTRI_MAPPERS = [
+  'firstname',
+  'lastname',
+  'displayname'
+];
+
 const KC_TERMS = {
   ADMIN_GROUP_NAME: 'Realm Administrator',
   ADMIN_CLIENT_NAME: 'realm-management',
