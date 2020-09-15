@@ -26,12 +26,6 @@ const KC_CONFIG = {
   },
 };
 
-// TODO: move to configmap
-const MASTER_REF = {
-  ALIAS: 'master',
-  REALM: 'master',
-};
-
 // Identity provider realms reference:
 const IDP_REF = {
   GITHUB: {
@@ -39,18 +33,33 @@ const IDP_REF = {
     REALM: '_github',
   },
   IDIR: {
-    ALIAS: 'github',
-    REALM: '_github',
+    ALIAS: 'idir',
+    REALM: 'idir',
   },
   BCEID: {
-    ALIAS: 'github',
-    REALM: '_github',
+    ALIAS: 'bceid',
+    REALM: '_bceid',
   },
-  BCSC: {
-    ALIAS: 'github',
-    REALM: '_github',
-  },
+  // BCSC: {
+  //   ALIAS: 'github',
+  //   REALM: '_github',
+  // },
 };
+
+const IDP_TERMS = [
+  {
+    ALIAS: 'github',
+    REALM: '_github',
+  },
+  {
+    ALIAS: 'idir',
+    REALM: 'idir',
+  },
+  {
+    ALIAS: 'bceid',
+    REALM: '_bceid',
+  },
+];
 
 const KC_TERMS = {
   ADMIN_GROUP_NAME: 'Realm Administrator',
@@ -68,4 +77,4 @@ const KC_MIGRATION_ROUTES = {
 
 const CLIENT_MIGRATION_FIELDS = ['id', 'clientId', 'redirectUris'];
 
-module.exports = { KC_MIGRATION_ROUTES, MASTER_REF, IDP_REF, CLIENT_MIGRATION_FIELDS, KC_CONFIG, KC_TERMS };
+module.exports = { KC_MIGRATION_ROUTES, IDP_TERMS, IDP_REF, CLIENT_MIGRATION_FIELDS, KC_CONFIG, KC_TERMS, IDP_MAPPER_TYPES, IDP_USER_ATTRI_MAPPERS };
