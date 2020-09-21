@@ -26,6 +26,22 @@ const KC_CONFIG = {
   },
 };
 
+const KC_TERMS = {
+  ADMIN_GROUP_NAME: 'Realm Administrator',
+  ADMIN_CLIENT_NAME: 'realm-management',
+  IMPERSONATION_ROLE: 'impersonation',
+};
+
+/**
+ * The following constants will be used during service migration:
+ */
+// The service names:
+const KC_MIGRATION_ROUTES = {
+  NEW: process.env.NEW_KC,
+  OLD: process.env.OLD_KC,
+};
+
+const CLIENT_MIGRATION_FIELDS = ['id', 'clientId', 'redirectUris'];
 // Identity provider realms reference:
 const IDP_REF = {
   GITHUB: {
@@ -46,6 +62,7 @@ const IDP_REF = {
   // },
 };
 
+// List of Identity provider realms reference:
 const IDP_TERMS = [
   {
     ALIAS: 'github',
@@ -61,28 +78,27 @@ const IDP_TERMS = [
   },
 ];
 
+// List of different Identity provider mapper types:
 const IDP_MAPPER_TYPES = ['saml-username-idp-mapper', 'saml-user-attribute-idp-mapper'];
 
+// Identity provider configurations for siteminder services (consistent between IDIR and BCeID)
+const SM_IDP_CONFIG = {
+  validateSignature: 'true',
+  samlXmlKeyNameTranformer: 'KEY_ID',
+  signingCertificate: process.env.SM_CERT,
+  postBindingLogout: 'true',
+  postBindingResponse: 'true',
+  backchannelSupported: 'false',
+  forceAuthn: 'true',
+  singleSignOnServiceUrl: process.env.SM_SSO_URL,
+  singleLogoutServiceUrl: process.env.SM_SLO_URL,
+};
+
+// List of Identity provider mappers that needs to be updated:
 const IDP_USER_ATTRI_MAPPERS = [
   'firstname',
   'lastname',
   'displayname'
 ];
 
-const KC_TERMS = {
-  ADMIN_GROUP_NAME: 'Realm Administrator',
-  ADMIN_CLIENT_NAME: 'realm-management',
-  IMPERSONATION_ROLE: 'impersonation',
-};
-
-/**
- * The following constants will be used during service migration:
- */
-const KC_MIGRATION_ROUTES = {
-  NEW: process.env.NEW_KC,
-  OLD: process.env.OLD_KC,
-};
-
-const CLIENT_MIGRATION_FIELDS = ['id', 'clientId', 'redirectUris'];
-
-module.exports = { KC_MIGRATION_ROUTES, IDP_TERMS, IDP_REF, CLIENT_MIGRATION_FIELDS, KC_CONFIG, KC_TERMS, IDP_MAPPER_TYPES, IDP_USER_ATTRI_MAPPERS };
+module.exports = { KC_MIGRATION_ROUTES, IDP_TERMS, IDP_REF, CLIENT_MIGRATION_FIELDS, KC_CONFIG, KC_TERMS, IDP_MAPPER_TYPES, IDP_USER_ATTRI_MAPPERS, SM_IDP_CONFIG };
