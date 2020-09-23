@@ -1,4 +1,4 @@
-# Steps:
+## Steps to create a new Realm for product team:
 
 ### Create realm:
 (`kc-create-realm.sh`)
@@ -14,7 +14,7 @@
 2. update it to false
 
 
-### Link to IDP Realms, separetly for each ID:
+### Link to IDP Realms, separately for each ID:
 (`kc-link-realm.sh`)
 1. get the IDP realm
 2. create a client in the IDP realm with REDIRECT_URI that point to the new realm's broker endpoint
