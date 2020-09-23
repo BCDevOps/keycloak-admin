@@ -1,6 +1,8 @@
 'use strict';
 
-const { IDP_REF, CLIENT_MIGRATION_FIELDS, IDP_MAPPER_TYPES, IDP_USER_ATTRI_MAPPERS } = require('../constants');
+const fs = require('fs-extra');
+
+const { MODE, SM_IDP_CONFIG, IDP_REF, CLIENT_MIGRATION_FIELDS, IDP_MAPPER_TYPES, IDP_USER_ATTRI_MAPPERS, OUTPUT_PATH } = require('../constants');
 
 /**
  * Replace target string in json object and return the new object
@@ -15,7 +17,6 @@ const urlReplacer = (jsonContent, targetString, replacement) => {
   if (!stringifiedContent.includes(targetString)) console.warn(`----No target string found from - ${jsonContent}`);
   return JSON.parse(stringifiedContent.replace(replacer, replacement));
 }
-
 
 /**
  * Update APP realm IDP configuration
@@ -39,13 +40,16 @@ const updateAppRealmIdp = async (appRealmName, idp, kcAdminClient, newRoute, old
 
     // 1. get the current idp json content:
     const idpConfig = await kcAdminClient.identityProviders.findOne(idpRef);
+    await fs.outputJson(`${OUTPUT_PATH}/app-idps/${idpRef.alias}/${idpRef.realm}.json`, idpConfig);
 
     // 2. replace the uri:
     const newIdp = urlReplacer(idpConfig, oldRoute, newRoute);
 
     // 3. update the idp:
-    console.log(newIdp);
-    // await kcAdminClient.identityProviders.update(idpRef, newIdp);
+    // console.log(newIdp);
+    if (MODE.EXECUTE_CHANGE) {
+      await kcAdminClient.identityProviders.update(idpRef, newIdp);
+    }
 
   } catch (e) {
     throw e;
@@ -75,6 +79,7 @@ const updateIdpAppClient = async (clientId, idp, kcAdminClient, newRoute, oldRou
     const idpClients = await kcAdminClient.clients.findOne(idpClientRef);
     if (idpClients.length !== 1) throw Error(`----Not expected clients found #${idpClients.length}!`);
     const idpClient = idpClients[0];
+    await fs.outputJson(`${OUTPUT_PATH}/clients/${idpClientRef.realm}/${idpClientRef.clientId}.json`, idpClient);
 
     // 2. replace the uris:
     const newIdpClient = Object.keys(idpClient).reduce((acc, key) => {
@@ -99,8 +104,10 @@ const updateIdpAppClient = async (clientId, idp, kcAdminClient, newRoute, oldRou
     }, {});
 
     // 3. update the idp client:
-    console.log(newIdpClient);
-    // await kcAdminClient.clients.update(idpClientRef, newIdpClient);
+    // console.log(newIdpClient);
+    if (MODE.EXECUTE_CHANGE) {
+      await kcAdminClient.clients.update(idpClientRef, newIdpClient);
+    }
 
     // 4. TODO - after confirming changes are good, delete the extra redirect uri from step 2.2
 
@@ -126,8 +133,9 @@ const updateAgentIdpMappers = async (kcAdminClient, mapperContent, mapperRef) =>
   if (mapperContent.identityProviderMapper == IDP_MAPPER_TYPES[0]) {
     // 1. username mapper:
     newMapperContent.config = newMapperFormat.config;
-    console.log(newMapperContent.config);
-    // await kcAdminClient.identityProviders.updateMapper(mapperRef, newMapperContent);
+    if (MODE.EXECUTE_CHANGE) {
+      await kcAdminClient.identityProviders.updateMapper(mapperRef, newMapperContent);
+    }
 
   } else if (mapperContent.identityProviderMapper == IDP_MAPPER_TYPES[1]) {
     // 2. user attribute mapper:
@@ -137,12 +145,47 @@ const updateAgentIdpMappers = async (kcAdminClient, mapperContent, mapperRef) =>
 
     if (IDP_USER_ATTRI_MAPPERS.includes(mapperAttri.toLowerCase())) {
       newMapperContent.config['attribute.name'] = mapperAttriName.toLowerCase();
-      console.log(newMapperContent.config);
-      // await kcAdminClient.identityProviders.updateMapper(mapperRef, newMapperContent);
+      if (MODE.EXECUTE_CHANGE) {
+        await kcAdminClient.identityProviders.updateMapper(mapperRef, newMapperContent);
+      }
     }
   } else {
     // 3. Don't care
   }
 }
 
-module.exports = { urlReplacer, updateIdpAppClient, updateAppRealmIdp, updateAgentIdpMappers };
+
+/**
+ * Update Agent IDP Configurations to use new Federation Services
+ * @param {kcAdmin} kcAdminClient with auth setup
+ * @param {Object} idpRef idp reference
+ */
+const updateAgentIdpConfigs = async (kcAdminClient, idpRef) => {
+  // 1. IDP configs:
+  const idpConfig = await kcAdminClient.identityProviders.findOne(idpRef);
+  await fs.outputJson(`${OUTPUT_PATH}/idps/${idpRef.alias}.json`, idpConfig);
+
+  // update IDP configuration based on new Federation Services:
+  let newIdpConfig = idpConfig;
+  Object.keys(SM_IDP_CONFIG).map(c =>  {
+    if (newIdpConfig.config[c])
+    newIdpConfig.config[c] = SM_IDP_CONFIG[c];
+  });
+
+  if (MODE.EXECUTE_CHANGE) {
+    await kcAdminClient.identityProviders.update(idpRef, newIdpConfig);
+  }
+
+  // 2. for each mapper, filter the ones that needs to be updated:
+  const allMappers = await kcAdminClient.identityProviders.findMappers(idpRef);
+  await fs.outputJson(`${OUTPUT_PATH}/idps/mapper-${idpRef.alias}.json`, allMappers);
+
+  await allMappers.forEach(async m => {
+    // set the mapper reference:
+    console.log(`IDP mapper: ${m.identityProviderAlias} - ${m.name}`);
+    const mapperRef = {...idpRef, ...{ id: m.id }};
+    await updateAgentIdpMappers(kcAdminClient, m, mapperRef);
+  });
+}
+
+module.exports = { urlReplacer, updateIdpAppClient, updateAppRealmIdp, updateAgentIdpConfigs, updateAgentIdpMappers };
