@@ -6,7 +6,9 @@ const {
   updateAgentIdpConfigs,
 } = require('./libs/service-name-migration-utils');
 // const { getAllRealms, getRealmAdmins, getRealmSettings } = require('./libs/get-realms');
-const { KC_CONFIG, IDP_TERMS, KC_MIGRATION_ROUTES, MODE } = require('./constants');
+const {
+ KC_CONFIG, IDP_TERMS, KC_MIGRATION_ROUTES, MODE 
+} = require('./constants');
 
 const main = async () => {
   try {
@@ -183,32 +185,6 @@ const main = async () => {
       );
     }
 
-    // await Promise.all(
-    //   appRealms.map(async (r) => {
-    //     const appRealmName = r.realm;
-    //     const idps = IDP_TERMS.map((i) => i.ALIAS);
-    //     const appRealmIdps = r.idps.filter((idp) => idps.includes(idp));
-
-    //     await Promise.all(
-    //       appRealmIdps.map(async (appRealmIdp) => {
-    //         console.log(`realm: ${appRealmName} - IDP: ${appRealmIdp}`);
-    //         // for each appRealmIdp:
-    //         // If the IDP config is not using BCGov specific auth options, skip the update!
-    //         if (
-    //           extraIDPs.includes(`https://${oldRoute}/auth/realms/${appRealmName}/${appRealmIdp}`)
-    //         ) {
-    //           console.log(
-    //             `----This IDP is NOT a BCGov option, skip! realm: ${appRealmName} - IDP: ${appRealmIdp}`,
-    //           );
-    //         } else {
-    //           console.log('----proceed!');
-    //           await updateAppRealmIdp(appRealmName, appRealmIdp, kcAdminClient, newRoute, oldRoute);
-    //         }
-    //       }),
-    //     );
-    //   }),
-    // );
-
     // -------------------------------------------------------------------------------------------
     // 6. update IDP realm IDP settings
     // 6.1 Github IDP: update GitHub OAuth settings
@@ -216,7 +192,9 @@ const main = async () => {
     // take SM federation services input, update SAML configuration and IDP mappers
 
     console.log('------------- Update each IDPs and mappers:');
-    await IDP_TERMS.forEach(async (idp) => {
+    // Execute in series for each IDP: (rate limit)
+    // eslint-disable-next-line no-restricted-syntax
+    for (const idp of IDP_TERMS) {
       const idpRef = {
         alias: idp.ALIAS,
         realm: idp.REALM,
@@ -230,9 +208,10 @@ const main = async () => {
       } else {
         // Update IDP realm IDP settings
         console.log(`IDP: ${idp.ALIAS}`);
+        // eslint-disable-next-line no-await-in-loop
         await updateAgentIdpConfigs(kcAdminClient, idpRef);
       }
-    });
+    }
 
     // -------------------------------------------------------------------------------------------
 
