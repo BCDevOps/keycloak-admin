@@ -25,6 +25,8 @@
 ```shell
 # 1. create environment files and fill in
 cp .env.sample .env.<env>
+# - service account username and password are from oc secret `sso-app-admin-secret`
+# - SiteMinder configs available from XML
 
 # 2. create output folder
 mkdir output
