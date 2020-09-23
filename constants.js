@@ -33,8 +33,17 @@ const KC_TERMS = {
 };
 
 /**
- * The following constants will be used during service migration:
+ * The following constants will be used during SSO Service Name Migration:
  */
+// running mode:
+const MODE = {
+  EXECUTE_CHANGE: process.argv[2] === 'execute' ? true: false,
+  ENV: process.env.KC_ENV,
+};
+
+// records tracking:
+const OUTPUT_PATH = MODE.EXECUTE_CHANGE ? `./output/migration-result-${process.env.KC_ENV}` : `./output/verify-result-${process.env.KC_ENV}`;
+
 // The service names:
 const KC_MIGRATION_ROUTES = {
   NEW: process.env.NEW_KC,
@@ -101,4 +110,4 @@ const IDP_USER_ATTRI_MAPPERS = [
   'displayname'
 ];
 
-module.exports = { KC_MIGRATION_ROUTES, IDP_TERMS, IDP_REF, CLIENT_MIGRATION_FIELDS, KC_CONFIG, KC_TERMS, IDP_MAPPER_TYPES, IDP_USER_ATTRI_MAPPERS, SM_IDP_CONFIG };
+module.exports = { KC_MIGRATION_ROUTES, OUTPUT_PATH, MODE, IDP_TERMS, IDP_REF, CLIENT_MIGRATION_FIELDS, KC_CONFIG, KC_TERMS, IDP_MAPPER_TYPES, IDP_USER_ATTRI_MAPPERS, SM_IDP_CONFIG };
