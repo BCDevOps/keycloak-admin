@@ -1,5 +1,3 @@
-'use strict';
-
 const dotenv = require('dotenv');
 
 // setup KC env file
@@ -11,15 +9,15 @@ const KC_CONFIG = {
     realmName: process.env.MASTER_REALM_NAME,
     requestConfig: {
       /* Axios request config options https://github.com/axios/axios#request-config */
-      headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
     },
   },
   AUTH: {
-      username: process.env.KEYCLOAK_ADMIN_USER_ID,
-      password: process.env.KEYCLOAK_ADMIN_USER_PASSWORD,
-      grantType: process.env.KEYCLOAK_GRANT_TYPE,
-      clientId: process.env.KEYCLOAK_CLIENT_ID,
-      totp: process.env.OTP_CODE,
+    username: process.env.KEYCLOAK_ADMIN_USER_ID,
+    password: process.env.KEYCLOAK_ADMIN_USER_PASSWORD,
+    grantType: process.env.KEYCLOAK_GRANT_TYPE,
+    clientId: process.env.KEYCLOAK_CLIENT_ID,
+    totp: process.env.OTP_CODE,
   },
   REALM: {
     NAME: process.env.REALM_NAME,
@@ -37,12 +35,14 @@ const KC_TERMS = {
  */
 // running mode:
 const MODE = {
-  EXECUTE_CHANGE: process.argv[2] === 'execute' ? true: false,
+  EXECUTE_CHANGE: process.argv[2] === 'execute',
   ENV: process.env.KC_ENV,
 };
 
 // records tracking:
-const OUTPUT_PATH = MODE.EXECUTE_CHANGE ? `./output/migration-result-${process.env.KC_ENV}` : `./output/verify-result-${process.env.KC_ENV}`;
+const OUTPUT_PATH = MODE.EXECUTE_CHANGE
+  ? `./output/migration-result-${process.env.KC_ENV}`
+  : `./output/verify-result-${process.env.KC_ENV}`;
 
 // The service names:
 const KC_MIGRATION_ROUTES = {
@@ -72,20 +72,7 @@ const IDP_REF = {
 };
 
 // List of Identity provider realms reference:
-const IDP_TERMS = [
-  {
-    ALIAS: 'github',
-    REALM: '_github',
-  },
-  {
-    ALIAS: 'idir',
-    REALM: 'idir',
-  },
-  {
-    ALIAS: 'bceid',
-    REALM: '_bceid',
-  },
-];
+const IDP_TERMS = [IDP_REF.GITHUB, IDP_REF.IDIR, IDP_REF.BCEID];
 
 // List of different Identity provider mapper types:
 const IDP_MAPPER_TYPES = ['saml-username-idp-mapper', 'saml-user-attribute-idp-mapper'];
@@ -104,10 +91,18 @@ const SM_IDP_CONFIG = {
 };
 
 // List of Identity provider mappers that needs to be updated:
-const IDP_USER_ATTRI_MAPPERS = [
-  'firstname',
-  'lastname',
-  'displayname'
-];
+const IDP_USER_ATTRI_MAPPERS = ['firstname', 'lastname', 'displayname'];
 
-module.exports = { KC_MIGRATION_ROUTES, OUTPUT_PATH, MODE, IDP_TERMS, IDP_REF, CLIENT_MIGRATION_FIELDS, KC_CONFIG, KC_TERMS, IDP_MAPPER_TYPES, IDP_USER_ATTRI_MAPPERS, SM_IDP_CONFIG };
+module.exports = {
+  KC_MIGRATION_ROUTES,
+  OUTPUT_PATH,
+  MODE,
+  IDP_TERMS,
+  IDP_REF,
+  CLIENT_MIGRATION_FIELDS,
+  KC_CONFIG,
+  KC_TERMS,
+  IDP_MAPPER_TYPES,
+  IDP_USER_ATTRI_MAPPERS,
+  SM_IDP_CONFIG,
+};
