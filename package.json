@@ -8,6 +8,7 @@
     "kc-dev": "KC_ENV=dev node index.js",
     "kc-test": "KC_ENV=test node index.js",
     "kc-prod": "KC_ENV=prod node index.js",
+    "lint": "eslint *.js",
     "test": "``` ./kc-curl.sh test -sX GET 'https://sso-test.pathfinder.gov.bc.ca/auth/admin/realms/tfrs/authentication/flows/first%20broker%20login/executions' | jq -r '.[] | select (.providerId == \"idp-review-profile\") | .authenticationConfig'"
   },
   "repository": {
@@ -27,5 +28,13 @@
     "keycloak-admin": "^1.13.0",
     "ldapjs": "^1.0.2",
     "prompts": "^2.3.2"
+  },
+  "devDependencies": {
+    "eslint": "^7.9.0",
+    "eslint-config-airbnb-base": "^14.2.0",
+    "eslint-config-prettier": "^6.11.0",
+    "eslint-plugin-import": "^2.22.0",
+    "eslint-plugin-prettier": "^3.1.4",
+    "prettier": "^2.1.2"
   }
 }
