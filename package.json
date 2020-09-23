@@ -25,6 +25,7 @@
     "dotenv": "^8.2.0",
     "fs-extra": "^8.1.0",
     "keycloak-admin": "^1.13.0",
-    "ldapjs": "^1.0.2"
+    "ldapjs": "^1.0.2",
+    "prompts": "^2.3.2"
   }
 }
