@@ -10,7 +10,10 @@
     # take a backup now
     ./backup.sh -1
     exit
-  
+
+    # test restore with a new DB instance
+    ./backup.sh -v all
+
   # ========= If things go wrong =========
   # 1. community notification
   # 2. remove SSO route
