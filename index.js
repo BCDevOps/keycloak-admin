@@ -110,18 +110,20 @@ const main = async () => {
     const clientsCountArray = [];
     const idpsCountArray = [];
 
+    // Filter out the IDP integration which does not belong to BCGov default ones
+    // Format: <idp_alias>/<app_realm_name>
     // Form a list of all clients for each IDP realm:
     allIdpClients.forEach((i) => {
       i.clients.forEach((c) => {
         clientsCount += 1;
-        clientsCountArray.push(`${c}/${i.realm}`);
+        clientsCountArray.push(`${i.realm}/${c.split('/').pop()}`);
       });
     });
     // Form a list of all app realms and corresponding IDP usage:
     appRealms.forEach((r) => {
       r.idps.forEach((i) => {
         idpsCount += 1;
-        idpsCountArray.push(`https://${oldRoute}/auth/realms/${r.realm}/${i}`);
+        idpsCountArray.push(`${i}/${r.realm}`);
       });
     });
 
@@ -171,9 +173,7 @@ const main = async () => {
           console.log(`realm: ${appRealmName} - IDP: ${appRealmIdp}`);
           // for each appRealmIdp:
           // If the IDP config is not using BCGov specific auth options, skip the update!
-          if (
-            extraIDPs.includes(`https://${oldRoute}/auth/realms/${appRealmName}/${appRealmIdp}`)
-          ) {
+          if (extraIDPs.includes(`${appRealmIdp}/${appRealmName}`)) {
             console.log(
               `----This IDP is NOT a BCGov option, skip! realm: ${appRealmName} - IDP: ${appRealmIdp}`,
             );
