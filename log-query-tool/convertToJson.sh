@@ -22,9 +22,7 @@ function convertToJSON() {
   echo "writing $TEMP_DIR/$FILE_NAME.json"
   JSON_FILENAME="$TEMP_DIR/$FILE_NAME.json"
 
-  echo [ > $JSON_FILENAME
-  echo $ALMOST_JSON >> $JSON_FILENAME
-  echo ']' >> $JSON_FILENAME
+  echo "[ $ALMOST_JSON ]" > $JSON_FILENAME
   echo "finished writing to $JSON_FILENAME"
 }
 
@@ -38,5 +36,4 @@ rm -rf $FILE_PATH
 
 echo "JSON Files can be found in: "
 echo $TEMP_DIR
-
 
