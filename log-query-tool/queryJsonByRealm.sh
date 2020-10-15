@@ -27,7 +27,7 @@ export -f filterJSONByRealm
 ls $JSON_FILE_PATH | xargs -I {} bash -c 'filterJSONByRealm "$@"' _ $JSON_FILE_PATH/{} $REALM $ALL_REALM_JSON >> "$PWD/$REALM.json"
 
 echo "filter complete"
-ALL_REALM_JSON=$(cat $PWD/$REALM.json | jq -r 'flatten(1)')
+ALL_REALM_JSON=$(cat $PWD/$REALM.json | jq -r -s 'flatten(1)')
 echo "writing to $PWD/$REALM.json"
 echo "$ALL_REALM_JSON" > "$PWD/$REALM.json"
 
