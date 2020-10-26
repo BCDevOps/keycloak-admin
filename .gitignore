@@ -25,7 +25,7 @@ hs_err_pid*
 cache
 setenv-*.sh
 *output/
-
+tmp/
 node_modules/
 realms/
 
