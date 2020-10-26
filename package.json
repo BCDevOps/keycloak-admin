@@ -9,7 +9,7 @@
     "kc-test": "KC_ENV=test node index.js",
     "kc-prod": "KC_ENV=prod node index.js",
     "lint": "eslint *.js",
-    "test": "``` ./kc-curl.sh test -sX GET 'https://sso-test.pathfinder.gov.bc.ca/auth/admin/realms/tfrs/authentication/flows/first%20broker%20login/executions' | jq -r '.[] | select (.providerId == \"idp-review-profile\") | .authenticationConfig'"
+    "test": "``` ./kc-curl.sh test -sX GET 'https://sbox.oidc.gov.bc.ca/auth/admin/realms/tfrs/authentication/flows/first%20broker%20login/executions' | jq -r '.[] | select (.providerId == \"idp-review-profile\") | .authenticationConfig'"
   },
   "repository": {
     "type": "git",
