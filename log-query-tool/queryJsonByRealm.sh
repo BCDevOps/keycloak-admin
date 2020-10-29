@@ -1,6 +1,6 @@
 #! /bin/bash
 # VARIABLES:
-# JSON_FILE_PATH <string> this is where the json files are stored
+# LOG_PATH <string> this is where the json files are stored
 
 # DEPENDANCIES
 # - jq
@@ -16,19 +16,16 @@ function filterJSONByRealm() {
   ALL_REALM_JSON=$3
 
   QUERY="realmId=$REALM"
-  REALM_JSON=$(cat $PATH_TO_FILE | jq -r --arg realmQuery "$QUERY" '[.[] | select(.message | test($realmQuery))]' )
+  REALM_JSON=$(cat $PATH_TO_FILE | jq -s -r --arg realmQuery "$QUERY" '[.[] | select(.message | test($realmQuery))]' )
   if [ "$REALM_JSON" != "[]" ]; then
     echo ${REALM_JSON}
   fi
 }
 
-echo "filtering JSON"
 export -f filterJSONByRealm
-ls $JSON_FILE_PATH | xargs -I {} bash -c 'filterJSONByRealm "$@"' _ $JSON_FILE_PATH/{} $REALM $ALL_REALM_JSON >> "$PWD/$REALM.json"
+ls $LOG_PATH | xargs -I {} bash -c 'filterJSONByRealm "$@"' _ $LOG_PATH/{} $REALM $ALL_REALM_JSON >> "$PWD/$REALM.json"
 
-echo "filter complete"
 ALL_REALM_JSON=$(cat $PWD/$REALM.json | jq -r -s 'flatten(1)')
-echo "writing to $PWD/$REALM.json"
-echo "$ALL_REALM_JSON" > "$PWD/$REALM.json"
+echo "$ALL_REALM_JSON" 
 
 
