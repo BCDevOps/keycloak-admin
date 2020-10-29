@@ -18,7 +18,7 @@ const importLdapUsers = async () => {
     );
 
     const usersWithoutGuids = users.filter(
-      (user) => typeof user.idir_user_guid === 'undefined' || user.idir_user_guid === null,
+      (user) => !user.attributes && !user.attributes.idir_user_guid,
     );
 
     console.log(`Found ${users.length} users with ${usersWithoutGuids.length} missing guids`);
@@ -57,7 +57,7 @@ const importLdapUsers = async () => {
         res.on('searchEntry', (entry) => {
           users.filter(
             (user) => user.username === entry.object.sAMAccountName.toLowerCase(),
-          )[0].idir_user_guid = entry.object.bcgovGUID;
+          )[0].attributes.idir_user_guid = entry.object.bcgovGUID;
         });
 
         client.unbind((e) => {
