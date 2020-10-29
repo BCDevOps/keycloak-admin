@@ -1,6 +1,7 @@
 const kcAdmin = require('keycloak-admin').default;
 
-// const { getRealmSettings } = require('./libs/get-realms');
+// const { importLdapUsers, createUsers } = require('./libs/import-users');
+// const { getAllRealms, getRealmSettings } = require('./libs/get-realms');
 // const { ssoServiceNameMigration } = require('./libs/service-name-migration');
 // const { deleteClientRole } = require('./libs/update-client-role');
 const { KC_CONFIG, KC_TERMS } = require('./constants');
@@ -8,6 +9,7 @@ const { KC_CONFIG, KC_TERMS } = require('./constants');
 const main = async () => {
   try {
     // setup kc admin instance:
+    // eslint-disable-next-line new-cap
     const kcAdminClient = new kcAdmin(KC_CONFIG.REQUEST);
     await kcAdminClient.auth(KC_CONFIG.AUTH);
 
@@ -15,6 +17,16 @@ const main = async () => {
     // kcAdminClient.setConfig({
     //   realmName: KC_CONFIG.REALM.NAME,
     // });
+
+    // Get all realms:
+    // const allRealms = await getAllRealms(kcAdminClient);
+    // allRealms.forEach((r) => {
+    //   console.log(`ID: ${r.id}, Realm Name: ${r.displayName}`);
+    // });
+
+    // Pre-populate users from LDAP, require realm setup already:
+    // await importLdapUsers();
+    // await createUsers(kcAdminClient);
 
     // SSO Service Name Migration
     // await ssoServiceNameMigration(kcAdminClient);

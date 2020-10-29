@@ -35,3 +35,6 @@ realms/
 # nodejs env var
 .env-*
 .env
+
+# ldap users
+ldap-users.json

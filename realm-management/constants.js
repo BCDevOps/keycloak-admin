@@ -31,6 +31,22 @@ const KC_TERMS = {
 };
 
 /**
+ * The following constants will be to import LDAP users:
+ */
+const LDAP_CONFIG = {
+  url: 'ldaps://idir.bcgov',
+  base: 'DC=idir,DC=BCGOV',
+  optionAttri: ['samAccountName', 'bcgovGUID'],
+};
+
+const LDAP_CRED = {
+  username: process.env.LDAP_USER,
+  password: process.env.LDAP_PASSWORD,
+};
+
+const LDAP_USERS_FILE_PATH = 'ldap-users.json';
+
+/**
  * The following constants will be used during SSO Service Name Migration:
  */
 // running mode:
@@ -96,6 +112,9 @@ const IDP_USER_ATTRI_MAPPERS = ['firstname', 'lastname', 'displayname'];
 module.exports = {
   KC_MIGRATION_ROUTES,
   OUTPUT_PATH,
+  LDAP_CONFIG,
+  LDAP_CRED,
+  LDAP_USERS_FILE_PATH,
   MODE,
   IDP_TERMS,
   IDP_REF,

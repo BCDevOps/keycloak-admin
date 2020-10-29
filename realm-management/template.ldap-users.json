@@ -1,0 +1,19 @@
+[
+    {
+        "username": "<idir username 1>",
+        "attributes": {
+            "idir_user_guid": "<guid>"
+        },
+        "roles": ["<array of strings of desired roles>"]
+    },
+    {
+        "username": "<idir username 2>",
+        "attributes": {},
+        "roles": ["<array of strings of desired roles>"]
+    },
+    {
+        "username": "<idir username 3>",
+        "attributes": {},
+        "roles": ["<array of strings of desired roles>"]
+    }
+]
