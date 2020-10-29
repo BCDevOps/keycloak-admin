@@ -5,19 +5,10 @@ Thsi repo contains tools and resources for helping provision and manage Red Hat 
 The keycloak realm builders is containerized application that will provision new realms based on the content supplied in a GitHub branch. This [readme](keycloak_realm_builder/readme.md) contains more details. 
 
 ## Shell Scripts
-Manage KC resources using Shell scripts. Read [readme](sh_scripts/readme.md) for more details.
+Manage KC resources using Shell scripts. See [readme](sh_scripts/readme.md) for more details.
 
-## NodeJs based Keycloak admin actions:
-For better flexibility, switch from shell scripts to a NodeJs based app.
+## NodeJs based Keycloak admin actions
+For better flexibility, we are using NodeJs based app to manage operational tasks. See [readme](realm-management/README.md) for more details.
 
-### Setup:
-Copy .env to different KC environments, such as `.env-test`. Fill in the env vars required in the .env file.
-
-### Run:
-```shell
-# install dependencies:
-npm install
-
-# to run in dev environment:
-npm run kc-dev
-```
+## SSO Pod Log Query Tool
+There are audit logs saved for all SSO keycloak pods. To be able to efficiently filter the logs based on information like realm ID, use the log query tool. See [readme](log-query-tool/README.md) for more details.
