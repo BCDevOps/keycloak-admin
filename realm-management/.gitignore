@@ -36,4 +36,5 @@ realms/
 .env-*
 .env
 
-users.json
+# ldap users
+ldap-users.json
