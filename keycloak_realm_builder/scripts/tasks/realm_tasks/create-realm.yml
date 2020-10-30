@@ -18,6 +18,9 @@
 - name: Set realm id fact
   set_fact:
     realm_id: "{{ realm_status.json.id | default('') }}"
+# - name: stop if realm already exists
+#   meta: end_play
+#   when: realm_id != ""
 - name: Create realm
   uri: 
     url: "{{ keycloak_url }}/auth/admin/realms"
