@@ -1,0 +1,31 @@
+---
+- hosts: localhost
+  connection: local
+  gather_facts: no
+  vars_files:
+    creds/sso_vars.yml
+  vars:
+  # load realms settings
+  - app_realm_data: "{{ lookup('file', 'inputs/realm-content-app.json') | from_json }}"
+  - idir_realm_data: "{{ lookup('file', 'inputs/realm-content-idir.json') | from_json }}"
+  - github_realm_data: "{{ lookup('file', 'inputs/realm-content-github.json') | from_json }}"
+  # path to different tasks:
+  - reuse_tasks: ../../tasks
+  tasks:
+  - name: Setup SSO instance with IDP and app realms
+    include_tasks: tasks/sso-prep.yml
+    with_items: 
+      - "{{ environments }}"
+    loop_control: 
+      loop_var: env
+    when: action == "config-keycloak"
+
+  - name: Provision new SSO realms
+    include_tasks: tasks/sso-prep.yml
+    vars:
+    - realm_data: "{{ app_realm_data }}"
+    with_items: 
+      - "{{ environments }}"
+    loop_control: 
+      loop_var: env
+    when: action == "new-realm"
