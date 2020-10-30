@@ -1,0 +1,8 @@
+# Creds
+sso_vars.yml
+
+# Input
+realm-content-*.json
+
+# Outputs
+output*
