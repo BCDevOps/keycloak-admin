@@ -21,7 +21,7 @@
     when: action == "config-keycloak"
 
   - name: Provision new SSO realms
-    include_tasks: tasks/sso-prep.yml
+    include_tasks: tasks/sso-provisioning.yml
     vars:
     - realm_data: "{{ app_realm_data }}"
     with_items: 
