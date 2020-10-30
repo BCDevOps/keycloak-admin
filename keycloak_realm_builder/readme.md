@@ -60,3 +60,7 @@ The Ansible playbook interacts with GitHub to place API calls. This requires a G
 
 # Acknowledgements 
 - [webhook code](https://github.com/adnanh/webhook)
+
+
+# Local Usage without GitHub Triggers:
+To re-use the KeyCloak Ansible Playbook for provisioning tasks without GitHub webhooks and run locally with custom tasks, follow steps [here](custom_usage/readme.md).
