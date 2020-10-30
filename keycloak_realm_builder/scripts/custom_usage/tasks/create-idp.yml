@@ -1,0 +1,37 @@
+---
+# tasks file for linking IDP to realm
+# Steps:
+# - create a client in IDP realm
+# - verify client created, and obtain client ID + secret
+# - create IDP in app realm
+# - create mappers for IDP
+
+- name: Render IDP template from input content
+  set_fact: 
+    idp_content: "{{ lookup('template', '{{ reuse_tasks }}/realm_tasks/templates/{{ idp_realm_id }}/realm-idp.keycloak-oidc.json.j2') }}"
+- name: Create IDP {{ idp_realm_alias }}
+  uri:
+    url: "{{ keycloak_url }}/auth/admin/realms/{{ idp_realm_id }}/identity-provider/instances"
+    method: POST
+    body_format: json
+    body: "{{ idp_content }}"
+    return_content: yes
+    status_code: 201
+    headers:
+      Authorization: "Bearer {{ token_data }}"
+- name: Read in array of mappers
+  set_fact: 
+    mapper_content_array: "{{ lookup('template', '{{ reuse_tasks }}/realm_tasks/templates/{{ idp_realm_id }}/realm-idp.mappers.json.j2') }}"
+- name: Create mapper in IDP {{ idp_realm_alias }}
+  uri: 
+    url: "{{ keycloak_url }}/auth/admin/realms/{{ idp_realm_id }}/identity-provider/instances/{{ idp_realm_alias }}/mappers"
+    method: POST
+    body_format: json
+    body: "{{ mapper_content }}"
+    return_content: yes
+    status_code: 201
+    headers: 
+      Authorization: "Bearer {{ token_data }}"
+  with_items: "{{ mapper_content_array }}"
+  loop_control:
+    loop_var: mapper_content
