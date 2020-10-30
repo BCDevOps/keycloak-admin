@@ -1,0 +1,28 @@
+{
+  "alias": "idir",
+  "displayName": "IDIR",
+  "providerId": "saml",
+  "enabled": true,
+  "storeToken": false,
+  "trustEmail": false,
+  "addReadTokenRoleOnCreate": false,
+  "authenticateByDefault": false,
+  "linkOnly": false,
+  "firstBrokerLoginFlowAlias": "first broker login",
+  "updateProfileFirstLoginMode": "on",
+  "config": {
+      "signingCertificate": "{{ idir_cert }}",
+      "singleSignOnServiceUrl": "{{ idir_sso_url }}",
+      "singleLogoutServiceUrl": "{{ idir_slo_url }}",
+      "backchannelSupported": "false",
+      "forceAuthn": "true",
+      "nameIDPolicyFormat": "urn:oasis:names:tc:SAML:2.0:nameid-format:persistent",
+      "postBindingAuthnRequest": "true",
+      "postBindingResponse": "true",
+      "samlXmlKeyNameTranformer": "KEY_ID",
+      "signatureAlgorithm": "RSA_SHA256",
+      "useJwksUrl": "true",
+      "validateSignature": "true"
+  },
+
+}

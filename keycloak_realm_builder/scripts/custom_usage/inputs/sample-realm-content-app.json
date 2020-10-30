@@ -1,0 +1,12 @@
+{
+    "id": "1234",
+    "realm": {
+        "id": "abcd1234",
+        "displayName": "Application ABC Realm",
+        "adminUser": "",
+        "idps": [
+            "IDIR",
+            "GitHub"
+        ]
+    }
+}

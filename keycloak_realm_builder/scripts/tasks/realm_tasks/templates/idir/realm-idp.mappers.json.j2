@@ -1,0 +1,64 @@
+[
+  {
+    "config": {
+      "attribute.name": "email",
+      "user.attribute": "email"
+    },
+    "identityProviderAlias": "idir",
+    "identityProviderMapper": "saml-user-attribute-idp-mapper",
+    "name": "email"
+  },
+  {
+    "config": {
+      "attribute.name": "displayname",
+      "user.attribute": "displayName"
+    },
+    "identityProviderAlias": "idir",
+    "identityProviderMapper": "saml-user-attribute-idp-mapper",
+    "name": "displayName"
+  },
+  {
+    "config": {
+      "attribute.name": "lastname",
+      "user.attribute": "lastName"
+    },
+    "identityProviderAlias": "idir",
+    "identityProviderMapper": "saml-user-attribute-idp-mapper",
+    "name": "Last Name"
+  },
+  {
+    "config": {
+      "attribute.name": "userName",
+      "user.attribute": "idir_username"
+    },
+    "identityProviderAlias": "idir",
+    "identityProviderMapper": "saml-user-attribute-idp-mapper",
+    "name": "attribute_username"
+  },
+  {
+    "config": {
+      "attribute.name": "firstname",
+      "user.attribute": "firstName"
+    },
+    "identityProviderAlias": "idir",
+    "identityProviderMapper": "saml-user-attribute-idp-mapper",
+    "name": "First Name"
+  },
+  {
+    "config": {
+      "attribute.name": "useridentifier",
+      "user.attribute": "idir_userid"
+    },
+    "identityProviderAlias": "idir",
+    "identityProviderMapper": "saml-user-attribute-idp-mapper",
+    "name": "idir_userid"
+  },
+  {
+    "config": {
+      "template": "${ATTRIBUTE.username}"
+    },
+    "identityProviderAlias": "idir",
+    "identityProviderMapper": "saml-username-idp-mapper",
+    "name": "username"
+  }
+]

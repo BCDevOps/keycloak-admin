@@ -1,5 +1,10 @@
 ---
 # tasks file for linking IDP to realm
+# Steps:
+# - create a client in IDP realm
+# - verify client created, and obtain client ID + secret
+# - create IDP in app realm
+# - create mappers for IDP
 
 - name: Set IDP name mapper fact
   set_fact:
@@ -49,7 +54,7 @@
     headers: 
       Authorization: "Bearer {{ token_data }}"
   register: idp_client_secret_status
-- name: Set IDP client id fact
+- name: Set IDP client secret fact
   set_fact:
     idp_client_secret: "{{ idp_client_secret_status.json.value | default('') }}"
 # --------------------TODO: if the IDP exists in the new realm already, delete it

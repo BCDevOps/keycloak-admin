@@ -1,0 +1,9 @@
+{
+    "id": "idir",
+    "realm": {
+        "id": "idir",
+        "displayName": "IDIR",
+        "adminUser": "",
+        "idp": "idir"
+    }
+}

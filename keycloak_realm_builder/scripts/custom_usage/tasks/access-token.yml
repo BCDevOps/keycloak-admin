@@ -1,0 +1,36 @@
+---
+#tasks file for obtaining access token
+
+## Auth to Keycloak with ServiceAccount and get token
+- name: Get access token via client
+  uri: 
+    url: "{{ keycloak_url }}/auth/realms/master/protocol/openid-connect/token"
+    method: POST
+    body_format: form-urlencoded
+    body:
+      grant_type: "{{ grant_type }}"
+      client_id: "{{ keycloak_client_id }}"
+      client_secret: "{{ keycloak_client_secret }}"
+    return_content: yes
+  register: token_output
+  when: grant_type == 'client_credentials'
+
+- name: Get access token via user
+  uri: 
+    url: "{{ keycloak_url }}/auth/realms/master/protocol/openid-connect/token"
+    method: POST
+    body_format: form-urlencoded
+    body:
+      grant_type: "{{ grant_type }}"
+      client_id: "{{ keycloak_client_id }}"
+      username: "{{ keycloak_user_id }}"
+      password: "{{ keycloak_user_password }}"
+      totp: "{{ otp_code }}"
+    return_content: yes
+  register: token_output
+  when: grant_type == 'password'
+
+- name: set fact for token_data
+  set_fact: 
+    token_data: "{{ token_output.json.access_token }}"
+  no_log: true

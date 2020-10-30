@@ -1,0 +1,20 @@
+{
+  "alias": "github",
+  "authenticateByDefault": false,
+  "config": {
+    "clientId": "{{ github_oauth_id }}",
+    "clientSecret": "{{ github_oauth_secret }}",
+    "defaultScope": "read:user user:email read:org",
+    "disableUserInfo": "",
+    "hideOnLoginPage": "",
+    "useJwksUrl": "true"
+  },
+  "enabled": true,
+  "firstBrokerLoginFlowAlias": "first broker login",
+  "linkOnly": false,
+  "providerId": "github",
+  "storeToken": false,
+  "trustEmail": true,
+  "addReadTokenRoleOnCreate": false,
+  "updateProfileFirstLoginMode": "on"
+}
