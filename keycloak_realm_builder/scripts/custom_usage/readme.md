@@ -1,10 +1,13 @@
 # Custom Usages of Ansible Playbook
 
-## Keycloak Initial Instance Setup for Testing Purpose:
+### 1. Keycloak Initial Instance Setup for Testing Purpose:
 Reuse the playbook to configure a brand new instance of keycloak with BCGov settings, i.e.: IDIR and GitHub IDP setup. As there some conflicting tasks between the original realm builder, custom script will be using a combination of local tasks and realm builder tasks.
 
-## Local realm provisioning:
+### 2. Local realm provisioning:
 Similar to realm-o-matic where the playbook creates the realm, IDP and admin users from configuration.
+
+### 3. Setup OCP4 Cluster login KeyCloak flow:
+Reuse provisioning playbook to setup realms specific for OCP4 login. See details [here](doc/ocp4-cluster-kc.md).
 
 
 ## Steps to Run:
@@ -39,5 +42,8 @@ ansible-playbook keycloak_realm_builder/scripts/custom_usage/playbook.yml -e act
 
 # config empty keycloak instance:
 ansible-playbook keycloak_realm_builder/scripts/custom_usage/playbook.yml -e action=config-keycloak
+
+# setup realm and details for OCP4 auth settings:
+ansible-playbook keycloak_realm_builder/scripts/custom_usage/playbook.yml -e action=ocp4-setup
 ```
 
