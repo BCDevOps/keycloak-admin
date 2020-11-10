@@ -12,6 +12,15 @@
   # path to different tasks:
   - reuse_tasks: ../../tasks
   tasks:
+
+  # Notes: with custom setup, the realm will be created with the extra settings:
+  # (see templates)
+  # 1. allow duplicate email
+  # 2. using BCGov login theme
+  - name: check for custom settings
+    set_fact:
+      custom: action == "ocp4-setup"
+
   - name: Setup SSO instance with IDP and app realms
     include_tasks: tasks/sso-prep.yml
     with_items: 
@@ -28,4 +37,15 @@
       - "{{ environments }}"
     loop_control: 
       loop_var: env
-    when: action == "new-realm"
+    when: action == "new-realm" or action == "ocp4-setup
+
+  # To setup OCP4 login, update the app_realm_data content and specify what are the IDPs needed
+  - name: Config ocp4 realms
+    include_tasks: tasks/ocp4-setup.yml
+    vars:
+    - realm_data: "{{ app_realm_data }}"
+    with_items: 
+      - "{{ environments }}"
+    loop_control: 
+      loop_var: env
+    when: action == "ocp4-setup"
