@@ -47,3 +47,4 @@
   vars:
   - realm: "{{ realm_data.realm.id }}"
   - admin_username: "{{ realm_data.realm.adminUser }}"
+  when: action != "k6-setup"

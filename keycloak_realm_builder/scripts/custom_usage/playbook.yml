@@ -38,7 +38,7 @@
       - "{{ environments }}"
     loop_control: 
       loop_var: env
-    when: action == "new-realm" or action == "ocp4-setup or action == "k6-setup"
+    when: action == "new-realm" or action == "ocp4-setup" or action == "k6-setup"
 
   - name: Config ocp4 realm
     include_tasks: tasks/ocp4-setup.yml

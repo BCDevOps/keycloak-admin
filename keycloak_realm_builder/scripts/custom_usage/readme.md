@@ -52,7 +52,7 @@ ansible-playbook keycloak_realm_builder/scripts/custom_usage/playbook.yml -e act
 ```
 
 ***Please note that there are some manual steps for K6 setup:***
-- assign the `Realm Admin Role` to the API client service account role
+- assign the client role `realm-management/realm-admin` to the API client in `Service Account Roles`
 - get the API client secret
 - setup test users' password
 
