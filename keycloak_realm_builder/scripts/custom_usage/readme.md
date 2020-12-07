@@ -25,7 +25,8 @@ cp inputs/sample-realm-content-app.json inputs/realm-content-app.json
 # for IDP realms:
 cp inputs/sample-realm-content-idp.json inputs/sample-realm-content-<idp_name>.json
 
-# then fill in the realm specs
+# then fill in the realm specs.
+# Please note that if SiteMinder integration is needed, make sure the instance URL is `https://<env>.oidc.gov.bc.ca`
 ```
 
 3. update the tasks included in 
@@ -40,10 +41,20 @@ tasks/sso-provisioning.yml
 # provision new realms:
 ansible-playbook keycloak_realm_builder/scripts/custom_usage/playbook.yml -e action=new-realm
 
-# config empty keycloak instance:
+# config an empty keycloak instance with BCGov specifications:
 ansible-playbook keycloak_realm_builder/scripts/custom_usage/playbook.yml -e action=config-keycloak
 
 # setup realm and details for OCP4 auth settings:
 ansible-playbook keycloak_realm_builder/scripts/custom_usage/playbook.yml -e action=ocp4-setup
+
+# setup realm and details for K6 testing:
+ansible-playbook keycloak_realm_builder/scripts/custom_usage/playbook.yml -e action=k6-setup
 ```
+
+***Please note that there are some manual steps for K6 setup:***
+- assign the `Realm Admin Role` to the API client service account role
+- get the API client secret
+- setup test users' password
+
+(Currently there is no endpoint found for those tasks, to be updated later on)
 
