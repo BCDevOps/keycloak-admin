@@ -29,6 +29,7 @@
       loop_var: env
     when: action == "config-keycloak"
 
+  # For OCP4 login or K6 testing setup, update the app_realm_data content and specify what are the IDPs needed
   - name: Provision new SSO realms
     include_tasks: tasks/sso-provisioning.yml
     vars:
@@ -37,10 +38,9 @@
       - "{{ environments }}"
     loop_control: 
       loop_var: env
-    when: action == "new-realm" or action == "ocp4-setup
+    when: action == "new-realm" or action == "ocp4-setup or action == "k6-setup"
 
-  # To setup OCP4 login, update the app_realm_data content and specify what are the IDPs needed
-  - name: Config ocp4 realms
+  - name: Config ocp4 realm
     include_tasks: tasks/ocp4-setup.yml
     vars:
     - realm_data: "{{ app_realm_data }}"
@@ -49,3 +49,13 @@
     loop_control: 
       loop_var: env
     when: action == "ocp4-setup"
+
+  - name: Config k6 realm
+    include_tasks: tasks/k6-setup.yml
+    vars:
+    - realm_data: "{{ app_realm_data }}"
+    with_items: 
+      - "{{ environments }}"
+    loop_control: 
+      loop_var: env
+    when: action == "k6-setup"
