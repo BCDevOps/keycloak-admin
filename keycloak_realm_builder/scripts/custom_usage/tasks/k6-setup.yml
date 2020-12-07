@@ -1,0 +1,115 @@
+---
+# tasks to create and setup realm for OCP4 cluster login
+- name: Setup keycloak variables for the environment
+  set_fact: 
+    keycloak_url: "{{ lookup('vars', env + '_keycloak_url') }}"
+    grant_type: "{{ lookup('vars', env + '_grant_type') }}"
+    keycloak_user_id: "{{ lookup('vars', env + '_keycloak_user_id') }}"
+    keycloak_user_password: "{{ lookup('vars', env + '_keycloak_user_password') }}"
+    otp_code: "{{ lookup('vars', env + '_otp_code') }}"
+    keycloak_client_id: "{{ lookup('vars', env + '_keycloak_client_id') }}"
+    keycloak_client_secret: "{{ lookup('vars', env + '_keycloak_client_secret') }}"
+
+- name: Get access token
+  include_tasks: access-token.yml
+
+- name: Setup facts
+  set_fact:
+    realm: "{{ realm_data.realm.id }}"
+
+### ========================================================
+# Make sure realm created already:
+
+- name: Check if realm exists
+  uri: 
+    url: "{{ keycloak_url }}/auth/admin/realms/{{ realm }}"
+    method: GET
+    body_format: json
+    return_content: yes
+    headers: 
+      Authorization: "Bearer {{ token_data }}"
+  register: realm_status
+  ignore_errors: true
+
+- name: Set realm id fact
+  set_fact:
+    realm_id: "{{ realm_status.json.id | default('') }}"
+
+- debug: msg="Working on realm - {{ realm }} - id {{ realm_id }}"
+
+- name: Setup k6 specific variables
+  set_fact: 
+    k6_client_name: k6
+    k6_api_client_name: api-test
+
+### ========================================================
+### Setup testing client - k6
+- name: Read in new json data for client
+  set_fact: 
+    client_content: "{{ lookup('template', 'templates/k6-client.json.j2') }}"
+
+- name: Create client from template
+  uri: 
+    url: "{{ keycloak_url }}/auth/admin/realms/{{ realm }}/clients"
+    method: POST
+    body_format: json
+    body: "{{ client_content }}"
+    return_content: yes
+    status_code: 201
+    headers: 
+      Authorization: "Bearer {{ token_data }}"
+
+
+### ========================================================
+### Setup testing client - API client
+
+- name: Read in new json data for client
+  set_fact: 
+    api_client_content: "{{ lookup('template', 'templates/k6-api-client.json.j2') }}"
+
+- name: Create client from template
+  uri: 
+    url: "{{ keycloak_url }}/auth/admin/realms/{{ realm }}/clients"
+    method: POST
+    body_format: json
+    body: "{{ api_client_content }}"
+    return_content: yes
+    status_code: 201
+    headers: 
+      Authorization: "Bearer {{ token_data }}"
+
+- name: Get the ID of the client
+  uri: 
+    url: "{{ keycloak_url }}/auth/admin/realms/{{ realm }}/clients?clientId={{ k6_api_client_name }}"
+    method: GET
+    body_format: json
+    return_content: yes
+    headers: 
+      Authorization: "Bearer {{ token_data }}"
+  register: k6_api_client_status
+
+- name: Set API client id fact
+  set_fact:
+    k6_api_client_id: "{{ k6_api_client_status.json[0].id | default('') }}"
+    k6_api_client_clientid: "{{ k6_api_client_status.json[0].clientId | default('') }}"
+
+# TODO: assign API client admin role, maybe through the corresponding service account user?
+# - name: Get the service account of the API client
+#   uri: 
+#     url: "{{ keycloak_url }}/auth/admin/realms/{{ realm }}/clients/{{ k6_api_client_id }}/service-account-user"
+#     method: GET
+#     body_format: json
+#     return_content: yes
+#     headers: 
+#       Authorization: "Bearer {{ token_data }}"
+#   register: k6_api_client_sa_user
+
+### ========================================================
+### Create test users
+
+- name: Create k6 test users
+  include_tasks: k6-test-user.yml
+  loop:
+    - { k6_username: 'test_00' }
+    - { k6_username: 'test_01' }
+    - { k6_username: 'test_02' }
