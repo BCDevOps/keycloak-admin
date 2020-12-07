@@ -77,3 +77,46 @@
     status_code: 201
     headers: 
       Authorization: "Bearer {{ token_data }}"
+
+### ========================================================
+### GitHub Auth flow setup:
+# TODO: Setup First Broker Login flow for GitHub IDP
+#   - take a copy of the original flow
+#   - disable the user review profile config execution, which helps to avoid unauthorized users to waste the time
+#   - also disable OTP sub flow to avoid triple factor auth
+# - Config GitHub IDP flows
+#   - override the first and post broker login flows in the IDP settings
+
+
+- name: Read in new json data for flow
+  set_fact: 
+    flow_content: "{{ lookup('template', 'templates/ocp4-first-broker-login-flow.json.j2') }}"
+
+- name: Copy the default First Broker Login flow
+  uri: 
+    url: "{{ keycloak_url }}/auth/admin/realms/{{ realm }}/authentication/flows/{{ ocp4_first_broker_login_flow_alias | urlencode }}/copy"
+    method: POST
+    body_format: json
+    body: "{{ flow_content }}"
+    return_content: yes
+    status_code: 201
+    headers: 
+      Authorization: "Bearer {{ token_data }}"
+
+- name: Check auth flows
+  uri: 
+    url: "{{ keycloak_url }}/auth/admin/realms/{{ realm }}/authentication/flows"
+    method: GET
+    body_format: json
+    return_content: yes
+    headers: 
+      Authorization: "Bearer {{ token_data }}"
+  register: flow_status
+  ignore_errors: true
+
+
+# TODO: Setup a Post Broker Login flow that filters GitHub org roles
+#   - start with a new flow
+#   - have a sub execution of type `Required Role By Client`
+#   - config the execution with target client, role to filter on, and a URL to redirect to if user does not have the required role
+ 
