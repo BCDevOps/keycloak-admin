@@ -1,0 +1,15 @@
+---
+- name: Read in new json data for user
+  set_fact: 
+    user_content: "{{ lookup('template', 'templates/k6-user.json.j2') | tojson}}"
+
+- name: Create user from template
+  uri: 
+    url: "{{ keycloak_url }}/auth/admin/realms/{{ realm }}/users"
+    method: POST
+    body_format: json
+    body: "{{ user_content }}"
+    return_content: yes
+    status_code: 201
+    headers:
+      Authorization: "Bearer {{ token_data }}"
