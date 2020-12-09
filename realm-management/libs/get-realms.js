@@ -115,4 +115,28 @@ const getRealmSettings = async (kcAdminClient, realmName = KC_CONFIG.REALM.NAME)
     throw e;
   }
 };
-module.exports = { getAllRealms, getRealmAdmins, getRealmSettings };
+
+/**
+ * Get details settings for a realm:
+ * @param {kcAdmin} kcAdminClient with auth setup
+ * @param {String} realmName target realm name
+ */
+const getRealmUsers = async (kcAdminClient, realmName = KC_CONFIG.REALM.NAME) => {
+  try {
+
+    kcAdminClient.setConfig({
+      realmName,
+    });
+
+    const users = await kcAdminClient.users.find({
+      max: 1000000,
+    });
+    // const userList = users.map(u => u.username);
+    return users.length;
+
+  } catch (e) {
+    throw e;
+  }
+};
+
+module.exports = { getAllRealms, getRealmAdmins, getRealmSettings, getRealmUsers };
