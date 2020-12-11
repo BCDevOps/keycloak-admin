@@ -155,3 +155,16 @@
   include_tasks: k6-test-user.yml
   loop: "{{ k6_usernames }}"
 
+### ========================================================
+### Print Out Results:
+
+- debug:
+    msg:
+      - "+++++ Realm ID - {{ realm}}"
+      - "+++++ API Client Name - {{ k6_api_client_name}}"
+      - ""+++++ API Client Secret - {{ k6_api_client_secret }} +++++++"
+      - "+++++ k6 Client Name - {{ k6_client_name }} +++++++"
+
+- debug:
+    msg: "+++++ k6 Username - {{ item }} Password - {{ k6_user_psw }} +++++++"
+  with_items: "{{ k6_usernames }}"
