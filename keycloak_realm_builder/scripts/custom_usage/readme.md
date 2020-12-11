@@ -17,7 +17,9 @@ Reuse provisioning playbook to setup realms for K6 test cases. See details [here
 1. setup keycloak service accounts
 ```shell
 cp creds/sample.sso-vars.yml creds/sso-vars.yml
-# and fill in credentials
+# Fill in credentials:
+# - if SiteMinder integration is needed, make sure the instance URL is `https://<env>.oidc.gov.bc.ca`
+# - if GitHub integration is needed, you will need to create a GitHub OAuth app first
 ```
 
 2. realm configs
@@ -27,9 +29,6 @@ cp inputs/sample-realm-content-app.json inputs/realm-content-app.json
 
 # for IDP realms:
 cp inputs/sample-realm-content-idp.json inputs/sample-realm-content-<idp_name>.json
-
-# then fill in the realm specs.
-# Please note that if SiteMinder integration is needed, make sure the instance URL is `https://<env>.oidc.gov.bc.ca`
 ```
 
 3. update the tasks included in 
