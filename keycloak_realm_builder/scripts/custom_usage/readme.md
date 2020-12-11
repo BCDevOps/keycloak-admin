@@ -49,11 +49,5 @@ ansible-playbook keycloak_realm_builder/scripts/custom_usage/playbook.yml -e act
 
 # setup realm and details for K6 testing:
 ansible-playbook keycloak_realm_builder/scripts/custom_usage/playbook.yml -e action=k6-setup
+# please note that end of the play, there will output list of setting you need to config k6 tests
 ```
-
-***Please note that there are some manual steps for K6 setup:***
-- assign the client role `realm-management/realm-admin` to the API client in `Service Account Roles`
-- get the API client secret
-
-(Currently there is no endpoint found for those tasks, to be updated later on)
-
