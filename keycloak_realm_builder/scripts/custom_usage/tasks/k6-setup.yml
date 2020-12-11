@@ -41,6 +41,7 @@
   set_fact: 
     k6_client_name: k6
     k6_api_client_name: api-test
+    k6_user_psw: test
 
 ### ========================================================
 ### Setup testing client - k6
@@ -110,6 +111,6 @@
 - name: Create k6 test users
   include_tasks: k6-test-user.yml
   loop:
-    - { k6_username: 'test_00' }
-    - { k6_username: 'test_01' }
-    - { k6_username: 'test_02' }
+    - { k6_username: 'test_00', k6_password: "{{ k6_user_psw }}" }
+    - { k6_username: 'test_01', k6_password: "{{ k6_user_psw }}" }
+    - { k6_username: 'test_02', k6_password: "{{ k6_user_psw }}" }
