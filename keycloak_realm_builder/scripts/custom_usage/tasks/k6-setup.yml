@@ -42,9 +42,9 @@
     k6_api_client_name: api-test
     k6_user_psw: test
     k6_usernames:
-      - 'test_20'
-      - 'test_21'
-      - 'test_22'
+      - 'test_00'
+      - 'test_01'
+      - 'test_02'
 
 ### ========================================================
 ### Setup testing client - k6
@@ -162,7 +162,7 @@
     msg:
       - "+++++ Realm ID - {{ realm}}"
       - "+++++ API Client Name - {{ k6_api_client_name}}"
-      - ""+++++ API Client Secret - {{ k6_api_client_secret }} +++++++"
+      - "+++++ API Client Secret - {{ k6_api_client_secret }} +++++++"
       - "+++++ k6 Client Name - {{ k6_client_name }} +++++++"
 
 - debug:
