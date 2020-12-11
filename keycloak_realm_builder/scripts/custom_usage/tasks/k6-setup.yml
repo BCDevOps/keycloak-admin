@@ -41,6 +41,10 @@
     k6_client_name: k6
     k6_api_client_name: api-test
     k6_user_psw: test
+    k6_usernames:
+      - 'test_20'
+      - 'test_21'
+      - 'test_22'
 
 ### ========================================================
 ### Setup testing client - k6
@@ -91,25 +95,63 @@
 - name: Set API client id fact
   set_fact:
     k6_api_client_id: "{{ k6_api_client_status.json[0].id | default('') }}"
-    k6_api_client_clientid: "{{ k6_api_client_status.json[0].clientId | default('') }}"
 
-# TODO: assign API client admin role, maybe through the corresponding service account user?
-# - name: Get the service account of the API client
-#   uri: 
-#     url: "{{ keycloak_url }}/auth/admin/realms/{{ realm }}/clients/{{ k6_api_client_id }}/service-account-user"
-#     method: GET
-#     body_format: json
-#     return_content: yes
-#     headers: 
-#       Authorization: "Bearer {{ token_data }}"
-#   register: k6_api_client_sa_user
+# Assign admin access for API client via its service-account-user:
+- name: Get the service account of the API client
+  uri: 
+    url: "{{ keycloak_url }}/auth/admin/realms/{{ realm }}/clients/{{ k6_api_client_id }}/service-account-user"
+    method: GET
+    body_format: json
+    return_content: yes
+    headers: 
+      Authorization: "Bearer {{ token_data }}"
+  register: k6_api_client_sa_user
+
+- name: Set API client-user id fact
+  set_fact:
+    k6_api_client_sa_user_id: "{{ k6_api_client_sa_user.json.id | default('') }}"
+
+- name: Get Realm Admin Group ID
+  uri: 
+    url: "{{ keycloak_url }}/auth/admin/realms/{{ realm }}/groups/?search={{ 'Realm Administrator' | urlencode }}"
+    method: GET
+    return_content: true
+    headers: 
+      Authorization: "Bearer {{ token_data }}"
+  register: admin_groupid_search
+
+- name: Set admin group ID fact
+  set_fact: 
+    admin_group_id: "{{ admin_groupid_search.json[0].id | default('') }}"
+
+- name: Add API client to admin group
+  uri: 
+    url: "{{ keycloak_url }}/auth/admin/realms/{{ realm }}/users/{{ k6_api_client_sa_user_id }}/groups/{{ admin_group_id }}"
+    method: PUT
+    body_format: json
+    return_content: yes
+    status_code: 204
+    headers:
+      Authorization: "Bearer {{ token_data }}"
+
+- name: Get client secret
+  uri: 
+    url: "{{ keycloak_url }}/auth/admin/realms/{{ realm }}/clients/{{ k6_api_client_id }}/client-secret"
+    method: GET
+    body_format: json
+    return_content: yes
+    headers: 
+      Authorization: "Bearer {{ token_data }}"
+  register: k6_api_client_secret_status
+
+- name: Set API client secret fact
+  set_fact:
+    k6_api_client_secret: "{{ k6_api_client_secret_status.json.value | default('') }}"
 
 ### ========================================================
 ### Create test users
 
 - name: Create k6 test users
   include_tasks: k6-test-user.yml
-  loop:
-    - { k6_username: 'test_00', k6_password: "{{ k6_user_psw }}" }
-    - { k6_username: 'test_01', k6_password: "{{ k6_user_psw }}" }
-    - { k6_username: 'test_02', k6_password: "{{ k6_user_psw }}" }
+  loop: "{{ k6_usernames }}"
+

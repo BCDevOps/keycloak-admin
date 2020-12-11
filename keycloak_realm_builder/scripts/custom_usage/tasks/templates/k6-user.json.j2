@@ -1,8 +1,8 @@
 {
-  "username": "{{ item.k6_username }}",
+  "username": "{{ item }}",
   "enabled": true,
-  "firstName": "{{ item.k6_username }}",
-  "lastName": "{{ item.k6_username }}",
-  "email": "{{ item.k6_username }}@email.com",
-  "credentials": [{"type":"password","value":"{{ item.k6_password }}","temporary":false}],
+  "firstName": "{{ item }}",
+  "lastName": "{{ item }}",
+  "email": "{{ item }}@email.com",
+  "credentials": [{"type":"password","value":"{{ k6_user_psw }}","temporary":false}],
 }
