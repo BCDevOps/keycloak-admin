@@ -9,6 +9,9 @@ Similar to realm-o-matic where the playbook creates the realm, IDP and admin use
 ### 3. Setup OCP4 Cluster login KeyCloak flow:
 Reuse provisioning playbook to setup realms specific for OCP4 login. See details [here](doc/ocp4-cluster-kc.md).
 
+### 4. Setup K6 Test realm:
+Reuse provisioning playbook to setup realms for K6 test cases. See details [here](doc/k6-setup-automation.md).
+
 
 ## Steps to Run:
 1. setup keycloak service accounts
