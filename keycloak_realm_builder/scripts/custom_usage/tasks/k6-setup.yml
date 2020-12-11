@@ -29,7 +29,6 @@
     headers: 
       Authorization: "Bearer {{ token_data }}"
   register: realm_status
-  ignore_errors: true
 
 - name: Set realm id fact
   set_fact:
