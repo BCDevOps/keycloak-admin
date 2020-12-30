@@ -1,0 +1,11 @@
+
+{
+  "name": "{{ ocp4_mapper_name }}",
+  "config": {
+    "claim": "roles",
+    "claim.value": "github:org:BCDevOps",
+    "role": "{{ ocp4_realm_role_name }}"
+  },
+  "identityProviderAlias": "{{ ocp4_idp_realm_alias }}",
+  "identityProviderMapper": "oidc-two-way-role-idp-mapper"
+}

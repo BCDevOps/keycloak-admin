@@ -1,17 +1,25 @@
 # Custom Usages of Ansible Playbook
 
-## Keycloak Initial Instance Setup for Testing Purpose:
+### 1. Keycloak Initial Instance Setup for Testing Purpose:
 Reuse the playbook to configure a brand new instance of keycloak with BCGov settings, i.e.: IDIR and GitHub IDP setup. As there some conflicting tasks between the original realm builder, custom script will be using a combination of local tasks and realm builder tasks.
 
-## Local realm provisioning:
+### 2. Local realm provisioning:
 Similar to realm-o-matic where the playbook creates the realm, IDP and admin users from configuration.
+
+### 3. Setup OCP4 Cluster login KeyCloak flow:
+Reuse provisioning playbook to setup realms specific for OCP4 login. See details [here](doc/ocp4-cluster-kc.md).
+
+### 4. Setup K6 Test realm:
+Reuse provisioning playbook to setup realms for K6 test cases. See details [here](doc/k6-setup-automation.md).
 
 
 ## Steps to Run:
 1. setup keycloak service accounts
 ```shell
 cp creds/sample.sso-vars.yml creds/sso-vars.yml
-# and fill in credentials
+# Fill in credentials:
+# - if SiteMinder integration is needed, make sure the instance URL is `https://<env>.oidc.gov.bc.ca`
+# - if GitHub integration is needed, you will need to create a GitHub OAuth app first
 ```
 
 2. realm configs
@@ -21,8 +29,6 @@ cp inputs/sample-realm-content-app.json inputs/realm-content-app.json
 
 # for IDP realms:
 cp inputs/sample-realm-content-idp.json inputs/sample-realm-content-<idp_name>.json
-
-# then fill in the realm specs
 ```
 
 3. update the tasks included in 
@@ -37,7 +43,13 @@ tasks/sso-provisioning.yml
 # provision new realms:
 ansible-playbook keycloak_realm_builder/scripts/custom_usage/playbook.yml -e action=new-realm
 
-# config empty keycloak instance:
+# config an empty keycloak instance with BCGov specifications:
 ansible-playbook keycloak_realm_builder/scripts/custom_usage/playbook.yml -e action=config-keycloak
-```
 
+# setup realm and details for OCP4 auth settings:
+ansible-playbook keycloak_realm_builder/scripts/custom_usage/playbook.yml -e action=ocp4-setup
+
+# setup realm and details for K6 testing:
+ansible-playbook keycloak_realm_builder/scripts/custom_usage/playbook.yml -e action=k6-setup
+# please note that end of the play, there will output list of setting you need to config k6 tests
+```

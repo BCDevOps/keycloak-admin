@@ -1,10 +1,13 @@
 ---
-# vars file for keycloak realm
+# vars file for SSO KeyCloak realm
+# ======= specify env =======
 environments: 
   - dev
   - test
   - prod
   - sbox
+
+# ======= credential for each env =======
 # ----dev----
 dev_grant_type: password
 dev_keycloak_client_id: 
@@ -34,7 +37,6 @@ prod_keycloak_client_id:
 prod_keycloak_user_id: 
 prod_keycloak_user_password: 
 prod_keycloak_url: 
-# for prod only!
 prod_otp_code: 
 
 # Alter auth type:
@@ -53,17 +55,19 @@ sbox_otp_code:
 # grant_type: client_credentials
 sbox_keycloak_client_secret: 
 
-# IDP settings:
+# ======= IDP settings =======
+# ----IDIR----
 idir_cert: 
 idir_sso_url: 
 idir_slo_url: 
+
+# ----GitHub----
 github_oauth_id: 
 github_oauth_secret: 
 
-# ----admin----
+# ======= Admin settings =======
 admin_idp: idir
 token_data: placeholder
 ldap_host: 
 ldap_username: 
 ldap_password: 
-
