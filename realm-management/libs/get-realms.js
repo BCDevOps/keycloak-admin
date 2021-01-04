@@ -21,37 +21,42 @@ const getAllRealms = async (kcAdminClient) => {
 /**
  * Get admin users for each realm:
  * @param {kcAdmin} kcAdminClient with auth setup
+ * @param {String} realmName target realm name
  * 
  */
-const getRealmAdmins = async (kcAdminClient) => {
+const getRealmAdmins = async (kcAdminClient, realmName) => {
   try {
-    const realms = await getAllRealms(kcAdminClient);
-  
-    const allAdmins = await realms.reduce(async (acc, r) => {
-      const group = await acc;
-      const realmId = r.id;
-      console.log(realmId);
-  
-      const allGroups = await kcAdminClient.groups.findOne({
-        realm: realmId,
-        name: KC_TERMS.ADMIN_GROUP_NAME,
+    let adminUsers = null;
+
+    // get all realm groups:
+    const allGroups = await kcAdminClient.groups.findOne({
+      realm: realmName,
+      name: KC_TERMS.ADMIN_GROUP_NAME,
+    });
+    
+    if (allGroups) {
+      // find BCGov default admin group:
+      const adminGroupId = allGroups.map(g => {
+        if (g.name === KC_TERMS.ADMIN_GROUP_NAME) return g.id;
       });
-      
-      let adminUsers = null;
-      if (allGroups) {
-        const adminGroupId = allGroups.map(g => {
-          if (g.name === KC_TERMS.ADMIN_GROUP_NAME) return g.id;
-        });
-        adminUsers = await kcAdminClient.groups.listMembers({
-          realm: realmId,
-          id: adminGroupId,
-        });
-      }
-      group[realmId] = adminUsers;
-      return group;
-    }, Promise.resolve({}));
-  
-    return allAdmins;
+
+      // get the group members:
+      adminUsers = await kcAdminClient.groups.listMembers({
+        realm: realmName,
+        id: adminGroupId,
+      });
+    } else {
+      console.log(`No admin group in realm ${realmName}!`);
+      return `No admin group in realm ${realmName}!`;
+    }
+
+    if (!adminUsers) {
+      console.log(`No admin users found in realm ${realmName}!`);
+      return `No admin users found in realm ${realmName}!`;
+    }
+    
+    return adminUsers.map(u => ({username: u.username, email: u.email}));
+
   } catch (e) {
     throw e;
   }
