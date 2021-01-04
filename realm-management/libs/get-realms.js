@@ -85,7 +85,7 @@ const getRealmAdmins = async (kcAdminClient, realmName) => {
  */
 const getRealmSettings = async (kcAdminClient, realmName = KC_CONFIG.REALM.NAME) => {
   try {
-    //  realm:
+    // 1. get realm info:
     const outputPath = `./output/${realmName}`;
 
     const targetRealm = await kcAdminClient.realms.findOne({
@@ -94,15 +94,19 @@ const getRealmSettings = async (kcAdminClient, realmName = KC_CONFIG.REALM.NAME)
 
     await fs.outputJson(`${outputPath}/realm.json`, targetRealm);
 
-    // realm-groups
-    const realmGroups = await kcAdminClient.groups.find();
+    // 2. get realm-group:
+    const realmGroups = await kcAdminClient.groups.find({
+      realm: realmName,
+    });
     await fs.outputJson(`${outputPath}/groups.json`, realmGroups);
 
     realmGroups.forEach(async g => {
       const groupRoles = await kcAdminClient.groups.listRoleMappings({
+        realm: realmName,
         id: g.id,
       });
       const groupRealmRoles = await kcAdminClient.groups.listRealmRoleMappings({
+        realm: realmName,
         id: g.id,
       });
       await fs.outputJson(`${outputPath}/groupRole/${g.name}.json`, {
@@ -111,10 +115,11 @@ const getRealmSettings = async (kcAdminClient, realmName = KC_CONFIG.REALM.NAME)
       });
     });
 
-    // realm-roles
+    // 3. get realm-roles:
     const realmRoles = await kcAdminClient.roles.find();
     await fs.outputJson(`${outputPath}/roles.json`, realmRoles);
-    // TODO: get composite role!
+
+    // TODO: 4. get client roles!
 
   } catch (e) {
     throw e;

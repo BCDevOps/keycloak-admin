@@ -71,7 +71,7 @@ const main = async () => {
     // +++ SSO Service Name Migration
     // await ssoServiceNameMigration(kcAdminClient);
 
-    // +++ Backup realm settings:
+    // +++ Get realm settings:
     // await getRealmSettings(kcAdminClient, KC_CONFIG.REALM.NAME);
 
     // +++ Disable impersonation role:
