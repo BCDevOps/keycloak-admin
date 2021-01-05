@@ -59,3 +59,13 @@
     loop_control: 
       loop_var: env
     when: action == "k6-setup"
+
+  - name: Add new IDPs or enable BCeID
+    include_tasks: tasks/manage-idp.yml
+    vars:
+    - realm_data: "{{ app_realm_data }}"
+    with_items: 
+      - "{{ environments }}"
+    loop_control: 
+      loop_var: env
+    when: action == "new-idp" or action == "enable-prod-bceid"
