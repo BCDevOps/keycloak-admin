@@ -33,7 +33,7 @@
   vars:
   - idp_name: "BCeID"
   - realm: "{{ realm_data.realm.id }}"
-  when: env == "prod" and idp_name == "BCeID" and action == "enable-prod-bceid" and prod_bceid_approved == "yes"
+  when: env == "prod" and idp_name == "BCeID" and action == "enable-prod-bceid" and prod_bceid_approved.user_input == "yes"
 
 # NOTE: BCeID will not be enabled in Production
 - name: Link to IDP Realms in "{{ env }}"
