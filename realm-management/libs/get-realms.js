@@ -157,7 +157,7 @@ const getRealmSettings = async (kcAdminClient, realmName = KC_CONFIG.REALM.NAME)
 };
 
 /**
- * Get details settings for a realm:
+ * Get users from a realm:
  * @param {kcAdmin} kcAdminClient with auth setup
  * @param {String} realmName target realm name
  */
@@ -171,12 +171,48 @@ const getRealmUsers = async (kcAdminClient, realmName = KC_CONFIG.REALM.NAME) =>
     const users = await kcAdminClient.users.find({
       max: 1000000,
     });
-    // const userList = users.map(u => u.username);
-    return users.length;
+
+    // format result:
+    const userList = users.map(u => u.username);
+    console.log(`There are ${users.length} users in realm ${realmName}`);
+    return {
+      count: users.length,
+      users: userList,
+    };
 
   } catch (e) {
     throw e;
   }
 };
 
-module.exports = { getAllRealms, getRealmAdmins, getRealmSettings, getRealmUsers, getAllRealmAdmins };
+/**
+ * Get users from ALL realms:
+ * @param {kcAdmin} kcAdminClient with auth setup
+ */
+const getAllUsers = async (kcAdminClient) => {
+  try {
+    const allRealms = await getAllRealms(kcAdminClient);
+
+    // accumulate users from each realms:
+    const allUsers = await allRealms.reduce(async (acc, r) => {
+      const userInRealm = await acc;
+      const result = await getRealmUsers(kcAdminClient, r.realm);
+
+      // format result:
+      userInRealm.push({
+        realm: r.realm,
+        count: result.count,
+        users: result.users,
+      });
+      return userInRealm;
+
+    }, Promise.resolve([]));
+
+    return allUsers;
+
+  } catch (e) {
+    throw e;
+  }
+};
+
+module.exports = { getAllRealms, getRealmAdmins, getRealmSettings, getRealmUsers, getAllRealmAdmins, getAllUsers };

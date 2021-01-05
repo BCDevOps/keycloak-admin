@@ -2,7 +2,7 @@ const kcAdmin = require('keycloak-admin').default;
 const fs = require('fs-extra');
 
 // const { importLdapUsers, createUsers } = require('./libs/import-users');
-const { getAllRealms, getRealmSettings, getRealmUsers, getAllRealmAdmins, getRealmAdmins } = require('./libs/get-realms');
+const { getAllRealms, getRealmSettings, getRealmUsers, getAllRealmAdmins, getRealmAdmins, getAllUsers } = require('./libs/get-realms');
 // const { ssoServiceNameMigration } = require('./libs/service-name-migration');
 // const { deleteClientRole } = require('./libs/update-client-role');
 const { KC_CONFIG, KC_TERMS } = require('./constants');
@@ -26,26 +26,13 @@ const main = async () => {
     // });
 
     // +++ Get all users:
-    // const userCount = await allRealms.reduce(async (acc, r) => {
-    //   const userInRealm = await acc;
-    //   console.log(r.realm);
+    // const realmUsers = await getRealmUsers(kcAdminClient, KC_CONFIG.REALM.NAME);
+    // const allUsers = await getAllUsers(kcAdminClient);
+    // const totalCount = allUsers.reduce((acc, u) => acc + u.count, 0);
+    // console.log(`Total user count: ${totalCount}`);
+    // await fs.outputJson(`output/${process.env.KC_ENV}-users-${totalCount}.json`, allUsers);
 
-    //   const count = await getRealmUsers(kcAdminClient, r.realm);
-
-    //   userInRealm.push({
-    //     realm: r.realm,
-    //     count,
-    //   });
-    //   return userInRealm;
-
-    // }, Promise.resolve([]));
-
-    // console.log(userCount);
-    // const totalCount = userCount.reduce((acc, u) => acc + u.count, 0);
-    // console.log(`Total users: ${totalCount} for ${realms.length} realms.`);
-    // await fs.outputJson(`output/${process.env.KC_ENV}-users-${totalCount}-realm-${realms.length}.json`, userCount);
-
-    // +++ Get realm admin users:
+    // +++ Get admin users:
     // const adminUsers = await getRealmAdmins(kcAdminClient, KC_CONFIG.REALM.NAME);
     // const allAdminUsers = await getAllRealmAdmins(kcAdminClient);
     // await fs.outputJson(`output/${process.env.KC_ENV}-all-admin-user.json`, allAdminUsers);
