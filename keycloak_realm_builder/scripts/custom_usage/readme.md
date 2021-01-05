@@ -15,12 +15,15 @@ Reuse provisioning playbook to setup realms for K6 test cases. See details [here
 ### 5. Manually adding new Identity Provider for existing realm:
 Reuse provisioning playbook to create new IDP integration for existing realms. See details [here](doc/new-idp.md).
 
+### 6. Delete a realm:
+This will delete the realm and its IDP integrations (IDIR/BCeID/GitHub/etc.)
 
 ## Steps to Run:
 1. setup keycloak service accounts
 ```shell
 cp creds/sample.sso-vars.yml creds/sso-vars.yml
 # Fill in credentials:
+# - if running in prod SSO, make sure to enter the correct OTP
 # - if SiteMinder integration is needed, make sure the instance URL is `https://<env>.oidc.gov.bc.ca`
 # - if GitHub integration is needed, you will need to create a GitHub OAuth app first
 ```
@@ -61,4 +64,8 @@ ansible-playbook keycloak_realm_builder/scripts/custom_usage/playbook.yml -e act
 
 # enable PRODUCTION BCeID for a realm:
 ansible-playbook keycloak_realm_builder/scripts/custom_usage/playbook.yml -e action=enable-prod-bceid
+
+# delete realms and IDP integrations:
+ansible-playbook keycloak_realm_builder/scripts/custom_usage/playbook.yml -e action=delete-realm
+# make sure delete-realm.yml step <Setup idp names> is configured correctly
 ```

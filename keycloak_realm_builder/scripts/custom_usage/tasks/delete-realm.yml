@@ -54,7 +54,7 @@
     status_code: 204
 
 # Clean IDP broker realm clients
-- name: Setup idp names
+- name: Setup idp names to be deleted
   set_fact: 
     idps:
     - GitHub
