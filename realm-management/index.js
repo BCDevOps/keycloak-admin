@@ -2,7 +2,7 @@ const kcAdmin = require('keycloak-admin').default;
 const fs = require('fs-extra');
 
 // const { importLdapUsers, createUsers } = require('./libs/import-users');
-const { getAllRealms, getRealmSettings, getRealmUsers, getRealmAdmins } = require('./libs/get-realms');
+const { getAllRealms, getRealmSettings, getRealmUsers, getAllRealmAdmins, getRealmAdmins } = require('./libs/get-realms');
 // const { ssoServiceNameMigration } = require('./libs/service-name-migration');
 // const { deleteClientRole } = require('./libs/update-client-role');
 const { KC_CONFIG, KC_TERMS } = require('./constants');
@@ -45,22 +45,9 @@ const main = async () => {
     // console.log(`Total users: ${totalCount} for ${realms.length} realms.`);
     // await fs.outputJson(`output/${process.env.KC_ENV}-users-${totalCount}-realm-${realms.length}.json`, userCount);
 
-    // +++ Get all realm admin users:
-    // const allRealms = await getAllRealms(kcAdminClient);
-
-    // const allAdminUsers = await allRealms.reduce(async (acc, r) => {
-    //   const accAdminUsers = await acc;
-
-    //   const adminUsers = await getRealmAdmins(kcAdminClient, r.id);
-    //   const result = {
-    //     realm: r.id,
-    //     admins: adminUsers,
-    //   };
-
-    //   accAdminUsers.push(result);
-    //   return accAdminUsers;
-
-    // }, Promise.resolve([]));
+    // +++ Get realm admin users:
+    // const adminUsers = await getRealmAdmins(kcAdminClient, KC_CONFIG.REALM.NAME);
+    // const allAdminUsers = await getAllRealmAdmins(kcAdminClient);
     // await fs.outputJson(`output/${process.env.KC_ENV}-all-admin-user.json`, allAdminUsers);
 
 
