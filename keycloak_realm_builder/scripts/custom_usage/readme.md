@@ -12,6 +12,9 @@ Reuse provisioning playbook to setup realms specific for OCP4 login. See details
 ### 4. Setup K6 Test realm:
 Reuse provisioning playbook to setup realms for K6 test cases. See details [here](doc/k6-setup-automation.md).
 
+### 5. Manually adding new Identity Provider for existing realm:
+Reuse provisioning playbook to create new IDP integration for existing realms. See details [here](doc/new-idp.md).
+
 
 ## Steps to Run:
 1. setup keycloak service accounts
@@ -52,4 +55,10 @@ ansible-playbook keycloak_realm_builder/scripts/custom_usage/playbook.yml -e act
 # setup realm and details for K6 testing:
 ansible-playbook keycloak_realm_builder/scripts/custom_usage/playbook.yml -e action=k6-setup
 # please note that end of the play, there will output list of setting you need to config k6 tests
+
+# add new IDP for specific realm:
+ansible-playbook keycloak_realm_builder/scripts/custom_usage/playbook.yml -e action=new-idp
+
+# enable PRODUCTION BCeID for a realm:
+ansible-playbook keycloak_realm_builder/scripts/custom_usage/playbook.yml -e action=enable-prod-bceid
 ```
