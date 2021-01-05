@@ -19,7 +19,7 @@ const getAllRealms = async (kcAdminClient) => {
 };
 
 /**
- * Get admin users for each realm:
+ * Get admin users for specific realm:
  * @param {kcAdmin} kcAdminClient with auth setup
  * @param {String} realmName target realm name
  * 
@@ -56,6 +56,36 @@ const getRealmAdmins = async (kcAdminClient, realmName) => {
     }
     
     return adminUsers.map(u => ({username: u.username, email: u.email}));
+
+  } catch (e) {
+    throw e;
+  }
+};
+
+/**
+ * Get admin users for ALL realms:
+ * @param {kcAdmin} kcAdminClient with auth setup
+ * 
+ */
+const getAllRealmAdmins = async (kcAdminClient) => {
+  try {
+    const allRealms = await getAllRealms(kcAdminClient);
+
+    const allAdminUsers = await allRealms.reduce(async (acc, r) => {
+      const accAdminUsers = await acc;
+
+      const adminUsers = await getRealmAdmins(kcAdminClient, r.id);
+      const result = {
+        realm: r.id,
+        admins: adminUsers,
+      };
+
+      accAdminUsers.push(result);
+      return accAdminUsers;
+
+    }, Promise.resolve([]));
+
+    return allAdminUsers;
 
   } catch (e) {
     throw e;
@@ -149,4 +179,4 @@ const getRealmUsers = async (kcAdminClient, realmName = KC_CONFIG.REALM.NAME) =>
   }
 };
 
-module.exports = { getAllRealms, getRealmAdmins, getRealmSettings, getRealmUsers };
+module.exports = { getAllRealms, getRealmAdmins, getRealmSettings, getRealmUsers, getAllRealmAdmins };
