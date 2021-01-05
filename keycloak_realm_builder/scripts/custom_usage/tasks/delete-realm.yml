@@ -1,0 +1,68 @@
+---
+#tasks file for deleting new realm
+
+- name: Setup keycloak variables for the environment
+  set_fact: 
+    keycloak_url: "{{ lookup('vars', env + '_keycloak_url') }}"
+    grant_type: "{{ lookup('vars', env + '_grant_type') }}"
+    keycloak_user_id: "{{ lookup('vars', env + '_keycloak_user_id') }}"
+    keycloak_user_password: "{{ lookup('vars', env + '_keycloak_user_password') }}"
+    otp_code: "{{ lookup('vars', env + '_otp_code') }}"
+    keycloak_client_id: "{{ lookup('vars', env + '_keycloak_client_id') }}"
+    keycloak_client_secret: "{{ lookup('vars', env + '_keycloak_client_secret') }}"
+
+- name: Get access token
+  include_tasks: access-token.yml
+
+- name: Set realm name fact
+  set_fact:
+    realm_name: "{{ realm_data.realm.id }}"
+
+# Check Realm exists
+- name: Check if realm exists
+  uri: 
+    url: "{{ keycloak_url }}/auth/admin/realms/{{ realm_name }}"
+    method: GET
+    body_format: json
+    return_content: yes
+    headers: 
+      Authorization: "Bearer {{ token_data }}"
+  register: realm_status
+  ignore_errors: true
+
+- name: Set realm id fact
+  set_fact:
+    realm_id: "{{ realm_status.json.id | default('') }}"
+
+- debug: msg="--------NO REALM FOUND - {{ realm_name }} - {{ env }}"
+  when: realm_id != realm_name
+
+- name: End the play if realm not found
+  meta: end_host
+  when: realm_id != realm_name
+
+# Delete Realm
+- debug: msg="--------DELETE REALM {{ realm_id }} in the {{ env }}"
+
+- name: Delete realm
+  uri: 
+    url: "{{ keycloak_url }}/auth/admin/realms/{{ realm_id }}"
+    method: DELETE
+    headers: 
+      Authorization: "Bearer {{ token_data }}"
+    return_content: yes
+    status_code: 204
+
+# Clean IDP broker realm clients
+- name: Setup idp names
+  set_fact: 
+    idps:
+    - GitHub
+    - IDIR
+    - BCeID
+
+- name: Delete Link to IDP Realms
+  include_tasks: delete-idp-link.yml
+  with_items: "{{ idps }}"
+  loop_control:
+    loop_var: idp_name

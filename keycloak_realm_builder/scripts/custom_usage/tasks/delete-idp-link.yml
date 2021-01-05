@@ -1,0 +1,42 @@
+---
+# tasks file for deleting IDP client
+
+- name: Set IDP name mapper fact
+  set_fact:
+    idp_name_id: { IDIR: idir, GitHub: _github, BCeID: _bceid }
+
+- name: Set IDP realm ID fact
+  set_fact:
+    idp_realm_id: "{{ idp_name_id[idp_name] }}"
+    client_id: "{{ keycloak_url }}/auth/realms/{{ realm_name }}"
+
+- name: Get the ID of the client
+  uri: 
+    url: "{{ keycloak_url }}/auth/admin/realms/{{ idp_realm_id }}/clients?clientId={{ client_id }}"
+    method: GET
+    body_format: json
+    return_content: yes
+    headers: 
+      Authorization: "Bearer {{ token_data }}"
+  register: idp_client_status
+
+- name: Set IDP client id fact
+  set_fact:
+    idp_client_id: "{{ idp_client_status.json[0].id | default('') }}"
+    idp_client_clientid: "{{ idp_client_status.json[0].clientId | default('') }}"
+
+- debug: msg="--------NO CLIENT FOUND {{ idp_name }}"
+  when: idp_client_id == ""
+
+- debug: msg="--------DELETE {{ idp_client_clientid }} - in - {{ idp_name }} "
+  when: idp_client_id != ""
+
+- name: Delete IDP client in {{ idp_name }}
+  uri: 
+    url: "{{ keycloak_url }}/auth/admin/realms/{{ idp_realm_id }}/clients/{{ idp_client_id }}"
+    method: DELETE
+    headers: 
+      Authorization: "Bearer {{ token_data }}"
+    return_content: yes
+    status_code: 204
+  when: idp_client_id != ""
