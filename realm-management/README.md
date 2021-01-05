@@ -3,7 +3,9 @@ For better flexibility, we are using NodeJs based app to manage operational task
 
 ### Current functions:
 - list all realms
+- list users for specific realm
 - list all users
+- list admin users for specific realm
 - list all realm admin users
 - pre-populate IDIR users form LDAP
 - Integrate with new SSO Service name
