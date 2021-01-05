@@ -8,7 +8,7 @@ The keycloak realm builder is a set of Ansible playbooks to provision new realms
 Ansible Playbook to delete a realm and it's IDP integrations. See [readme](clean-up-realms/README.md) for more details.
 
 ## realm-management
-This is a NodeJs based project. Designed for SSO instance admin user to easily management SSO resources, such as realms, users, roles and groups. See [readme](realm-management/README.md) for more details.
+This is a NodeJs based project. Designed for SSO instance admin user to easily manage SSO resources, such as realms, users, roles and groups. See [readme](realm-management/README.md) for more details.
 
 ## sh_scripts
 Manage KC resources using Shell scripts (deprecated). See [readme](sh_scripts/readme.md) for more details.
