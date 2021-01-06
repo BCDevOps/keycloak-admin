@@ -1,14 +1,11 @@
 # keycloak-admin
-Thsi repo contains tools and resources for helping provision and manage Red Hat SSO/KeyCloak realms for the BCDevOps Platform. 
+This repo contains tools and resources for helping provision and manage Red Hat SSO/KeyCloak realms for the BCDevOps Platform. 
 
 ## keycloak_realm_builder
-The keycloak realm builder is a set of Ansible playbooks to provision new realms based on the content supplied in a GitHub branch. This [readme](keycloak_realm_builder/readme.md) contains more details.
-
-## clean-up-realms
-Ansible Playbook to delete a realm and it's IDP integrations. See [readme](clean-up-realms/README.md) for more details.
+The keycloak realm builder is a set of Ansible playbooks. Created to automated frequent operational tasks, such as provisioning new realms. This [readme](keycloak_realm_builder/scripts/custom_usage/readme.md) contains more details on how to use it.
 
 ## realm-management
-This is a NodeJs based project. Designed for SSO instance admin user to easily manage SSO resources, such as realms, users, roles and groups. See [readme](realm-management/README.md) for more details.
+This is a NodeJs based project. Designed for SSO admin users to easily query SSO resources, such as realms, users, roles and groups. See [readme](realm-management/README.md) for more details.
 
 ## sh_scripts
 Manage KC resources using Shell scripts (deprecated). See [readme](sh_scripts/readme.md) for more details.

@@ -1,6 +1,71 @@
 # Keycloak Realm Creator:
+There are two parts that work together: 
+- Ansible Webhook: that receives a GitHub Pull Request payload from a private repo that tracks SSO realm request records from Realm-o-Matic
+- Ansible playbook: that creates Keycloak Realms based on realm configs and templates
 
-## Input
+## Part 1: Ansible Webhook
+
+### Configuration
+The webhook service takes in a `hooks.json` or `hooks.yml` file. This is a single file that lists all hook configurations and defines: 
+- The hook ID
+- The scripts to run
+- The parameters to pass to the scripts from the webhook payload
+- The filters required to either admit or deny the webhook
+
+The configuration used in this instance is as follows:
+```
+- id: webhook
+  execute-command: /opt/run-playbook.sh
+  command-working-directory: /opt
+  response-message: I got the payload!
+  pass-arguments-to-command:
+  - source: payload
+    name: pull_request.head.repo.html_url
+  - source: payload
+    name: pull_request.head.ref
+  - source: payload
+    name: number
+  - source: payload
+    name: pull_request.head.repo.owner.login
+  - source: payload
+    name: pull_request.url
+  trigger-rule:
+    and:
+    - match:
+        type: payload-hash-sha1
+        secret: mysecret
+        parameter:
+          source: header
+          name: X-Hub-Signature
+    - match:
+        type: value
+        value: opened
+        parameter:
+          source: payload
+          name: action
+```
+
+Based on the above configuration, we can call `https://{fqdn}/hooks/webhook` from GitHub. The filter will look for the secret `mysecret`, and the PR status as `opened`. 
+
+When the script runs, we pass some data from the payload along into the ansible playbook as extra vars: 
+
+```
+#!/bin/bash
+ansible-playbook playbook.yml -e repo_url=$1 -e branch=$2 -e pull_request_number=$3 -e repo_owner=$4 -e pull_request_url=$5 -e gh_token=$TOKEN
+```
+### Container Configuration
+This code leverages the ansible operator container since it has the necessary components to easily run ansible. 
+
+### GitHub Integration
+The Ansible playbook interacts with GitHub to place API calls. This requires a GitHub Access token mounted as a secret at `/opt/creds/token`.
+
+### Acknowledgements 
+- [webhook code](https://github.com/adnanh/webhook)
+
+
+## Part 2: Ansible playbook
+
+### Input to the playbook
 This ansible playbook receives a GitHub Pull Request Labeling information, including the following:
 - Full repo url and the branch
 - Pull request link and number
@@ -8,7 +73,7 @@ This ansible playbook receives a GitHub Pull Request Labeling information, inclu
 - Github access token
 - (the variables are passed in as specified in ./run-playbook.sh)
 
-## General Flow
+### General Flow of Creating Realms
 1. Setup env vars required for GitHub PR content fetching
 2. Fetch the new file from the PR, which contains the information to create a new realm
 3. Depending on the label added to the PR:
@@ -16,7 +81,7 @@ This ansible playbook receives a GitHub Pull Request Labeling information, inclu
   - If the trigger points to a `bceid-approved` labeling, start Prod-BCeID-enabling-Flow
 4. If any of the steps fail, throw a message and add a Failure label to the PR to trigger notification steps in [Realm-O-Matic](https://github.com/bcgov/realm-o-matic)
 
-### Realm-Creation-Flow
+#### Realm-Creation-Flow
 There are three instances of Keycloak that we support, dev, test and prod. Whenever a realm request is to be processed, same realms will be created in three Keycloaks. That being said, the realm creation play will be run three times, and they all include the following steps:
 1. Setup Keycloak api request
 2. Fetch access token
@@ -27,7 +92,7 @@ There are three instances of Keycloak that we support, dev, test and prod. Whene
 
 After all three realms have been created, add a `realm_complete_label` to the PR
 
-### Prod-BCeID-enabling-Flow
+#### Prod-BCeID-enabling-Flow
 If BCeID identity provide is requested with the realm, it will be setup and enabled only in the dev and test instances. For production realm, the usage of BCeID needs extra approval. When the approval has been given, the PR (the represents the original realm request) will be assinged a `bceid-approved` label. That triggers this flow.
 1. Setup Keycloak api request
 2. Fetch access token
