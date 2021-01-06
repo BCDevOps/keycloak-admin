@@ -1,0 +1,46 @@
+---
+# there are 2 types of actions:
+# 1. enable BCeID for production
+# 2. add a new IDP across environments
+
+- name: Setup keycloak variables for the environment
+  set_fact: 
+    keycloak_url: "{{ lookup('vars', env + '_keycloak_url') }}"
+    grant_type: "{{ lookup('vars', env + '_grant_type') }}"
+    keycloak_user_id: "{{ lookup('vars', env + '_keycloak_user_id') }}"
+    keycloak_user_password: "{{ lookup('vars', env + '_keycloak_user_password') }}"
+    otp_code: "{{ lookup('vars', env + '_otp_code') }}"
+    keycloak_client_id: "{{ lookup('vars', env + '_keycloak_client_id') }}"
+    keycloak_client_secret: "{{ lookup('vars', env + '_keycloak_client_secret') }}"
+
+- name: Get access token
+  include_tasks: access-token.yml
+
+- pause:
+    prompt: "Has the team obtained IDIM approval for Production BCeID for realm {{ realm_data.realm.id }}? (yes/no)"
+  register: prod_bceid_approved
+  no_log: true
+  tags:
+    - always
+  vars:
+  - idp_name: "BCeID"
+  - realm: "{{ realm_data.realm.id }}"
+  when: env == "prod" and idp_name == "BCeID" and action == "enable-prod-bceid"
+
+# NOTE: This is only for BCeID in production
+- name: Enable BCeID IDP in prod
+  include_tasks: "{{ reuse_tasks }}/realm_tasks/link-idp-realm.yml"
+  vars:
+  - idp_name: "BCeID"
+  - realm: "{{ realm_data.realm.id }}"
+  when: env == "prod" and idp_name == "BCeID" and action == "enable-prod-bceid" and prod_bceid_approved.user_input == "yes"
+
+# NOTE: BCeID will not be enabled in Production
+- name: Link to IDP Realms in "{{ env }}"
+  include_tasks: "{{ reuse_tasks }}/realm_tasks/link-idp-realm.yml"
+  vars:
+  - realm: "{{ realm_data.realm.id }}"
+  with_items: "{{ realm_data.realm.idps }}"
+  loop_control:
+    loop_var: idp_name
+  when: (env != "prod" or idp_name != "BCeID") and action == "new-idp"

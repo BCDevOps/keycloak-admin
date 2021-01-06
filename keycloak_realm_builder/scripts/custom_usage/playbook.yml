@@ -59,3 +59,28 @@
     loop_control: 
       loop_var: env
     when: action == "k6-setup"
+
+  - name: Add new IDPs or enable BCeID
+    include_tasks: tasks/manage-idp.yml
+    vars:
+    - realm_data: "{{ app_realm_data }}"
+    with_items: 
+      - "{{ environments }}"
+    loop_control: 
+      loop_var: env
+    when: action == "new-idp" or action == "enable-prod-bceid"
+
+  - pause:
+      prompt: "Are you sure to delete realm {{ app_realm_data.realm.id }} ? (yes/no)"
+    register: delete_confirmed
+    when: action == "delete-realm"
+
+  - name: Delete realm
+    include_tasks: tasks/delete-realm.yml
+    vars:
+    - realm_data: "{{ app_realm_data }}"
+    with_items: 
+      - "{{ environments }}"
+    loop_control: 
+      loop_var: env
+    when: action == "delete-realm" and delete_confirmed.user_input == "yes"

@@ -28,7 +28,7 @@
 - debug: msg="--------NO CLIENT FOUND {{ idp_name }}"
   when: idp_client_id == ""
 
-- debug: msg="--------DELETE {{ idp_client_clientid }} -in- {{ idp_name }} "
+- debug: msg="--------DELETE {{ idp_client_clientid }} - in - {{ idp_name }} "
   when: idp_client_id != ""
 
 - name: Delete IDP client in {{ idp_name }}
