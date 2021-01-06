@@ -23,7 +23,7 @@
 hs_err_pid*
 .DS_Store
 cache
-setenv-*.sh
+*setenv-*.sh
 *output/
 tmp/
 node_modules/
