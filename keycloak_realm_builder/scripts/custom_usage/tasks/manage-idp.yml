@@ -17,7 +17,7 @@
   include_tasks: access-token.yml
 
 - pause:
-    prompt: "Has the team obtained IDIM approval for Production BCeID? (yes/no)"
+    prompt: "Has the team obtained IDIM approval for Production BCeID for realm {{ realm_data.realm.id }}? (yes/no)"
   register: prod_bceid_approved
   no_log: true
   tags:
