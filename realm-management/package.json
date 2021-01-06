@@ -22,7 +22,7 @@
   },
   "homepage": "https://github.com/cvarjao/keycloak-admin#readme",
   "dependencies": {
-    "axios": "^0.18.1",
+    "axios": "^0.21.1",
     "dotenv": "^8.2.0",
     "fs-extra": "^8.1.0",
     "keycloak-admin": "^1.14.3",
