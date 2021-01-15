@@ -156,8 +156,13 @@
   loop: "{{ k6_usernames }}"
 
 ### ========================================================
-### Print Out Results:
+### Output result in param file:
+- name: Render Operator Deployment
+  template:
+    src: templates/k6-new-realms.param.j2
+    dest: new-realm-{{ realm }}-{{ env }}.param
 
+### Print Out Results in console:
 - debug:
     msg:
       - "+++++ Realm ID - {{ realm}}"
