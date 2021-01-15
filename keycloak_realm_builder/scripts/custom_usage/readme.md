@@ -21,7 +21,7 @@ This will delete the realm and its IDP integrations (IDIR/BCeID/GitHub/etc.)
 ## Steps to Run:
 1. setup keycloak service accounts
 ```shell
-cp creds/sample.sso-vars.yml creds/sso-vars.yml
+cp creds/sample.sso_vars.yml creds/sso_vars.yml
 # Fill in credentials:
 # - if running in prod SSO, make sure to enter the correct OTP
 # - if SiteMinder integration is needed, make sure the instance URL is `https://<env>.oidc.gov.bc.ca`
@@ -56,8 +56,9 @@ ansible-playbook keycloak_realm_builder/scripts/custom_usage/playbook.yml -e act
 ansible-playbook keycloak_realm_builder/scripts/custom_usage/playbook.yml -e action=ocp4-setup
 
 # setup realm and details for K6 testing:
-ansible-playbook keycloak_realm_builder/scripts/custom_usage/playbook.yml -e action=k6-setup
-# please note that end of the play, there will output list of setting you need to config k6 tests
+# 1. count = # of realms to be created
+# 2. please note that end of the play, there will output list of setting you need to config k6 tests
+ansible-playbook keycloak_realm_builder/scripts/custom_usage/playbook.yml -e action=k6-setup -e count=3
 
 # add new IDP for specific realm:
 ansible-playbook keycloak_realm_builder/scripts/custom_usage/playbook.yml -e action=new-idp
@@ -66,6 +67,6 @@ ansible-playbook keycloak_realm_builder/scripts/custom_usage/playbook.yml -e act
 ansible-playbook keycloak_realm_builder/scripts/custom_usage/playbook.yml -e action=enable-prod-bceid
 
 # delete realms and IDP integrations:
-ansible-playbook keycloak_realm_builder/scripts/custom_usage/playbook.yml -e action=delete-realm
+ansible-playbook keycloak_realm_builder/scripts/custom_usage/playbook.yml -e action=delete-real
 # make sure delete-realm.yml step <Setup idp names> is configured correctly
 ```
