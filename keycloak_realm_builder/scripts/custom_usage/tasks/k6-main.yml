@@ -24,6 +24,7 @@
   include_tasks: k6-setup.yml
   vars:
   - realm_data: "{{ increment_realm_data }}"
+  - curr_index: "{{ item }}"
   with_items: 
     - "{{ environments }}"
   loop_control: 
