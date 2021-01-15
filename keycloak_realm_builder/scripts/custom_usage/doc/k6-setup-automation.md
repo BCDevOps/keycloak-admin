@@ -12,4 +12,5 @@
 - create list of test users
   - keycloak local users
   - with preset password
-- output list of the objects created and info needed for k6 test config
+- printout a list of the objects created and info needed for k6 test config
+- also output oc param files to apply directly with k6 openshift templates

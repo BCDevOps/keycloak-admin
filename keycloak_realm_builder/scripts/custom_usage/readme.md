@@ -58,7 +58,7 @@ ansible-playbook keycloak_realm_builder/scripts/custom_usage/playbook.yml -e act
 # setup realm and details for K6 testing:
 # - count = # of realms to be created
 # - for each k6 realm, the realm ID will be suffixed with incremental index
-# - please note that end of the play, there will output list of setting you need to config k6 tests
+# - please note that end of the play, there will console out and output .param file that you need to config k6 testing job
 ansible-playbook keycloak_realm_builder/scripts/custom_usage/playbook.yml -e action=k6-setup -e count=3
 
 # add new IDP for specific realm:
