@@ -3,7 +3,7 @@
 ### Prep steps:
 - SSO instance admin credential will be needed to make API requests
 
-### Setup:
+### Setup for each k6 realm:
 - create a new realm for k6
 - create a public client for K6 auth requests - `k6`
 - create a private client for API test - `api-test`
