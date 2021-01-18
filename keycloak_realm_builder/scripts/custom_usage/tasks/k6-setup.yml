@@ -157,7 +157,7 @@
 
 ### ========================================================
 ### Output result in param file:
-- name: Render Operator Deployment
+- name: Generate param file
   template:
     src: templates/k6-new-realms.param.j2
     dest: new-realm-{{ realm }}-{{ env }}.param
