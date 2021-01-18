@@ -68,6 +68,6 @@ ansible-playbook keycloak_realm_builder/scripts/custom_usage/playbook.yml -e act
 ansible-playbook keycloak_realm_builder/scripts/custom_usage/playbook.yml -e action=enable-prod-bceid
 
 # delete realms and IDP integrations:
-ansible-playbook keycloak_realm_builder/scripts/custom_usage/playbook.yml -e action=delete-real
+ansible-playbook keycloak_realm_builder/scripts/custom_usage/playbook.yml -e action=delete-realm
 # make sure delete-realm.yml step <Setup idp names> is configured correctly
 ```
