@@ -1,0 +1,31 @@
+---
+# tasks to create k6 testing realms
+- name: set increment realm name
+  set_fact:
+    increment_realm_id: "{{ realm_data.realm.id }}{{ item }}"
+
+- name: Update new realm config for "{{ increment_realm_id }}"
+  set_fact:
+    increment_realm_data: "{{ realm_data | combine(new_item, recursive=true) }}"
+  vars:
+    new_item: "{ '{{ item.key }}': { 'id': '{{ increment_realm_id }}' } }"
+  with_dict: "{{ realm_data }}"
+
+- name: Provision new SSO realms
+  include_tasks: sso-provisioning.yml
+  vars:
+  - realm_data: "{{ increment_realm_data }}"
+  with_items: 
+    - "{{ environments }}"
+  loop_control: 
+    loop_var: env
+
+- name: Config k6 realm
+  include_tasks: k6-setup.yml
+  vars:
+  - realm_data: "{{ increment_realm_data }}"
+  - curr_index: "{{ item }}"
+  with_items: 
+    - "{{ environments }}"
+  loop_control: 
+    loop_var: env

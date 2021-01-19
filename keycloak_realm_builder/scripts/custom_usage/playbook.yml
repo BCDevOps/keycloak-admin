@@ -38,7 +38,7 @@
       - "{{ environments }}"
     loop_control: 
       loop_var: env
-    when: action == "new-realm" or action == "ocp4-setup" or action == "k6-setup"
+    when: action == "new-realm" or action == "ocp4-setup"
 
   - name: Config ocp4 realm
     include_tasks: tasks/ocp4-setup.yml
@@ -49,16 +49,6 @@
     loop_control: 
       loop_var: env
     when: action == "ocp4-setup"
-
-  - name: Config k6 realm
-    include_tasks: tasks/k6-setup.yml
-    vars:
-    - realm_data: "{{ app_realm_data }}"
-    with_items: 
-      - "{{ environments }}"
-    loop_control: 
-      loop_var: env
-    when: action == "k6-setup"
 
   - name: Add new IDPs or enable BCeID
     include_tasks: tasks/manage-idp.yml
@@ -83,4 +73,11 @@
       - "{{ environments }}"
     loop_control: 
       loop_var: env
-    when: action == "delete-realm" and delete_confirmed.user_input == "yes"
+    when: action == "delete-realm" and delete_confirmed.user_input == "yes"  
+
+  - name: Create "{{ count }}" K6 realms in total
+    include_tasks: tasks/k6-main.yml
+    vars:
+    - realm_data: "{{ app_realm_data }}"
+    with_sequence: start=0 end="{{ count | int - 1 }}"
+    when: action == "k6-setup"
