@@ -2,7 +2,7 @@ apiVersion: v1
 kind: Template
 metadata:
   creationTimestamp: null
-  name: "true"
+  name: realm-o-matic-creator
 objects:
 # GitHub webhook secret:
 - apiVersion: v1
@@ -11,42 +11,99 @@ objects:
     name: ${NAME}-gh-webhook
     labels:
       app: realm-o-matic
-  data:
+  stringData:
     token: ${GH_TOKEN}
   type: Opaque
-# sso credential config
+# SSO credential secret:
 - apiVersion: v1
-  kind: ConfigMap
+  kind: Secret
   metadata:
     name: ${NAME}-sso-creds
     labels:
       app: realm-o-matic
-  data:
+  type: Opaque
+  stringData:
     sso_vars.yml: |-
       ---
-      # vars file for keycloakrealm
+      # vars file for keycloak instances
       environments: 
         - dev
         - test
         - prod
       # ----dev----
-      dev_keycloak_client_id: 
-      dev_keycloak_url: 
-      dev_keycloak_client_secret: 
+      dev_keycloak_url: ${KC_URL_DEV}
+      dev_keycloak_client_id: ${KC_CLIENT_ID_DEV}
+      dev_keycloak_client_secret: ${KC_CLIENT_SECRET_DEV}
       # ----test----
-      test_keycloak_client_id: 
-      test_keycloak_url: 
-      test_keycloak_client_secret: 
+      test_keycloak_url: ${KC_URL_TEST}
+      test_keycloak_client_id: ${KC_CLIENT_ID_TEST}
+      test_keycloak_client_secret: ${KC_CLIENT_SECRET_TEST}
       # ----prod----
-      prod_keycloak_client_id: 
-      prod_keycloak_url: 
-      prod_keycloak_client_secret: 
+      prod_keycloak_url: ${KC_URL_PROD}
+      prod_keycloak_client_id: ${KC_CLIENT_ID_PROD}
+      prod_keycloak_client_secret: ${KC_CLIENT_SECRET_PROD}
       # ----admin----
-      admin_idp: 
+      admin_idp: ${KC_ADMIN_IDP}
       token_data: placeholder
-      ldap_host: 
-      ldap_username: 
-      ldap_password: 
+      ldap_host: ${LDAP_HOST}
+      ldap_username: ${LDAP_USERNAME}
+      ldap_password: ${LDAP_PASSWORD}
+# webhook ansible config
+- apiVersion: v1
+  kind: ConfigMap
+  metadata:
+    name: ${NAME}-webhook-ansible
+    labels:
+      app: webhook-ansible
+  data:
+    hooks.yml: |-
+      - id: webhook
+        execute-command: /opt/run-playbook.sh
+        command-working-directory: /opt
+        response-message: I got the payload!
+        pass-arguments-to-command:
+        - source: payload
+          name: pull_request.head.repo.html_url
+        - source: payload
+          name: pull_request.head.ref
+        - source: payload
+          name: number
+        - source: payload
+          name: pull_request.head.repo.owner.login
+        - source: payload
+          name: pull_request.url
+        - source: payload
+          name: pull_request.issue_url
+        - source: payload
+          name: label.name
+        trigger-rule:
+          and:
+          # - match:
+          #     type: payload-hash-sha1
+          #     secret: mysecret
+          #     parameter:
+          #       source: header
+          #       name: X-Hub-Signature
+          - match:
+              type: value
+              value: labeled
+              parameter:
+                source: payload
+                name: action
+          # Match either one of the following labels:
+          - or:
+            - match:
+                type: value
+                value: request-ready
+                parameter:
+                  source: payload
+                  name: label.name
+            - match:
+                type: value
+                value: bceid-approved
+                parameter:
+                  source: payload
+                  name: label.name
 parameters:
 - description: A name used for all objects
   displayName: Name
@@ -56,4 +113,70 @@ parameters:
 - description: Github webhook token
   displayName: GH_TOKEN
   name: GH_TOKEN
+  required: true
+  value: ''
+- description: Dev sso url
+  displayName: KC_URL_DEV
+  name: KC_URL_DEV
+  required: true
+  value: ''
+- description: Dev sso client id
+  displayName: KC_CLIENT_ID_DEV
+  name: KC_CLIENT_ID_DEV
+  required: true
+  value: ''
+- description: Dev sso client secret
+  displayName: KC_CLIENT_SECRET_DEV
+  name: KC_CLIENT_SECRET_DEV
+  required: true
+  value: ''
+- description: Test sso url
+  displayName: KC_URL_TEST
+  name: KC_URL_TEST
+  required: true
+  value: ''
+- description: Test sso client id
+  displayName: KC_CLIENT_ID_TEST
+  name: KC_CLIENT_ID_TEST
+  required: true
+  value: ''
+- description: Test sso client secret
+  displayName: KC_CLIENT_SECRET_TEST
+  name: KC_CLIENT_SECRET_TEST
+  required: true
+  value: ''
+- description: Prod sso url
+  displayName: KC_URL_PROD
+  name: KC_URL_PROD
+  required: true
+  value: ''
+- description: Prod sso client id
+  displayName: KC_CLIENT_ID_PROD
+  name: KC_CLIENT_ID_PROD
+  required: true
+  value: ''
+- description: Prod sso client secret
+  displayName: KC_CLIENT_SECRET_PROD
+  name: KC_CLIENT_SECRET_PROD
+  required: true
+  value: ''
+- description: Admin IDP name
+  displayName: KC_ADMIN_IDP
+  name: KC_ADMIN_IDP
+  required: true
+  value: ''
+- description: LDAP host
+  displayName: LDAP_HOST
+  name: LDAP_HOST
+  required: true
+  value: ''
+- description: LDAP username
+  displayName: LDAP_USERNAME
+  name: LDAP_USERNAME
+  required: true
+  value: ''
+- description: LDAP password
+  displayName: LDAP_PASSWORD
+  name: LDAP_PASSWORD
+  required: true
   value: ''
