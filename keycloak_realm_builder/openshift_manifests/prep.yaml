@@ -1,0 +1,59 @@
+apiVersion: v1
+kind: Template
+metadata:
+  creationTimestamp: null
+  name: "true"
+objects:
+# GitHub webhook secret:
+- apiVersion: v1
+  kind: Secret
+  metadata:
+    name: ${NAME}-gh-webhook
+    labels:
+      app: realm-o-matic
+  data:
+    token: ${GH_TOKEN}
+  type: Opaque
+# sso credential config
+- apiVersion: v1
+  kind: ConfigMap
+  metadata:
+    name: ${NAME}-sso-creds
+    labels:
+      app: realm-o-matic
+  data:
+    sso_vars.yml: |-
+      ---
+      # vars file for keycloakrealm
+      environments: 
+        - dev
+        - test
+        - prod
+      # ----dev----
+      dev_keycloak_client_id: 
+      dev_keycloak_url: 
+      dev_keycloak_client_secret: 
+      # ----test----
+      test_keycloak_client_id: 
+      test_keycloak_url: 
+      test_keycloak_client_secret: 
+      # ----prod----
+      prod_keycloak_client_id: 
+      prod_keycloak_url: 
+      prod_keycloak_client_secret: 
+      # ----admin----
+      admin_idp: 
+      token_data: placeholder
+      ldap_host: 
+      ldap_username: 
+      ldap_password: 
+parameters:
+- description: A name used for all objects
+  displayName: Name
+  name: NAME
+  required: true
+  value: realm-o-matic-creator
+- description: Github webhook token
+  displayName: GH_TOKEN
+  name: GH_TOKEN
+  value: ''
