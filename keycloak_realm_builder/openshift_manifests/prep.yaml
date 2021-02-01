@@ -2,7 +2,7 @@ apiVersion: v1
 kind: Template
 metadata:
   creationTimestamp: null
-  name: realm-o-matic-creator
+  name: realm-o-matic-ansible
 objects:
 # GitHub webhook secret:
 - apiVersion: v1
@@ -10,7 +10,7 @@ objects:
   metadata:
     name: ${NAME}-gh-webhook
     labels:
-      app: realm-o-matic
+      app: realm-o-matic-ansible
   stringData:
     token: ${GH_TOKEN}
   type: Opaque
@@ -20,7 +20,7 @@ objects:
   metadata:
     name: ${NAME}-sso-creds
     labels:
-      app: realm-o-matic
+      app: realm-o-matic-ansible
   type: Opaque
   stringData:
     sso_vars.yml: |-
@@ -54,7 +54,7 @@ objects:
   metadata:
     name: ${NAME}-webhook-ansible
     labels:
-      app: webhook-ansible
+      app: realm-o-matic-ansible
   data:
     hooks.yml: |-
       - id: webhook
@@ -109,7 +109,7 @@ parameters:
   displayName: Name
   name: NAME
   required: true
-  value: realm-o-matic-creator
+  value: realm-o-matic-ansible
 - description: Github webhook token
   displayName: GH_TOKEN
   name: GH_TOKEN

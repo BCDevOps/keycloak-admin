@@ -74,23 +74,23 @@ objects:
           name: webhook-ansible-4
         - configMap:
             defaultMode: 420
-            name: webhook-ansible-hooks
+            name: ${NAME}-webhook-ansible
           name: volume-var1j
         - configMap:
             defaultMode: 420
-            name: webhook-ansible-sso-creds
+            name: ${NAME}-sso-creds
           name: volume-var2k
         - name: volume-0vqrw
           secret:
             defaultMode: 420
-            secretName: gh-webhook-ansible
+            secretName: ${NAME}-gh-webhook
     test: false
 parameters:
 - description: A name used for all objects
   displayName: Name
   name: NAME
   required: true
-  value: webhook-ansible
+  value: realm-o-matic-ansible
 - description: Namespace for base image
   displayName: NAMESPACE
   name: NAMESPACE
