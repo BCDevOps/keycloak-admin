@@ -32,7 +32,7 @@ objects:
           deploymentconfig: ${NAME}
       spec:
         containers:
-        - image: docker-registry.default.svc:5000/${NAMESPACE}/${NAME}:${VERSION}
+        - image: ${NAME}:${VERSION}
           name: ${NAME}
           ports:
           - containerPort: 9000
@@ -91,11 +91,6 @@ parameters:
   name: NAME
   required: true
   value: realm-o-matic-ansible
-- description: Namespace for base image
-  displayName: NAMESPACE
-  name: NAMESPACE
-  required: true
-  value: devops-sso-tools
 - description: A name suffix used for all objects
   displayName: Suffix
   name: SUFFIX
