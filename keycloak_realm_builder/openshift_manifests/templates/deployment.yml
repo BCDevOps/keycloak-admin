@@ -3,6 +3,7 @@ kind: Template
 metadata:
   name: ${NAME}
 objects:
+# dc:
 - apiVersion: apps.openshift.io/v1
   kind: DeploymentConfig
   metadata:
@@ -32,7 +33,7 @@ objects:
           deploymentconfig: ${NAME}
       spec:
         containers:
-        - image: docker-registry.default.svc:5000/${NAMESPACE}/${NAME}:${VERSION}
+        - image: image-registry.openshift-image-registry.svc:5000/${NAMESPACE}/${NAME}:${VERSION}
           name: ${NAME}
           ports:
           - containerPort: 9000
@@ -74,28 +75,57 @@ objects:
           name: webhook-ansible-4
         - configMap:
             defaultMode: 420
-            name: webhook-ansible-hooks
+            name: ${NAME}-webhook-ansible
           name: volume-var1j
-        - configMap:
+        - secret:
             defaultMode: 420
-            name: webhook-ansible-sso-creds
+            secretName: ${NAME}-sso-creds
           name: volume-var2k
         - name: volume-0vqrw
           secret:
             defaultMode: 420
-            secretName: gh-webhook-ansible
+            secretName: ${NAME}-gh-webhook
     test: false
+# service:
+- apiVersion: v1
+  kind: Service
+  metadata:
+    labels:
+      app: ${NAME}
+    name: ${NAME}
+  spec:
+    ports:
+    - name: 9000-tcp
+      port: 9000
+      protocol: TCP
+      targetPort: 9000
+    selector:
+      deploymentconfig: ${NAME}
+    sessionAffinity: None
+    type: ClusterIP
+# route:
+- apiVersion: route.openshift.io/v1
+  kind: Route
+  metadata:
+    labels:
+      app: ${NAME}
+    name: ${NAME}
+  spec:
+    port:
+      targetPort: 9000-tcp
+    tls:
+      termination: edge
+    to:
+      kind: Service
+      name: ${NAME}
+      weight: 100
+    wildcardPolicy: None
 parameters:
 - description: A name used for all objects
   displayName: Name
   name: NAME
   required: true
-  value: webhook-ansible
-- description: Namespace for base image
-  displayName: NAMESPACE
-  name: NAMESPACE
-  required: true
-  value: devops-sso-tools
+  value: realm-o-matic-ansible
 - description: A name suffix used for all objects
   displayName: Suffix
   name: SUFFIX
@@ -105,3 +135,8 @@ parameters:
   name: VERSION
   required: true
   value: v1.0
+- description: Namespace where image is at
+  displayName: Namespace
+  name: NAMESPACE
+  required: true
+  value: ''

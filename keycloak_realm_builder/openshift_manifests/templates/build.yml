@@ -77,7 +77,7 @@ parameters:
   displayName: Name
   name: NAME
   required: true
-  value: webhook-ansible
+  value: realm-o-matic-ansible
 - description: A name suffix used for all objects
   displayName: Suffix
   name: SUFFIX
