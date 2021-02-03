@@ -6,7 +6,8 @@
         "adminUser": "",
         "idps": [
             "IDIR",
-            "GitHub"
+            "GitHub",
+            "BCeID"
         ]
     }
 }
