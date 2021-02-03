@@ -13,39 +13,7 @@ There are two parts that work together:
 - Ansible playbook that creates KeyCloak Realms based on realm configs and templates
 - see [details](scripts/readme.md) of what each component does!
 
-
-### Scripted OCP Installation
-
-```shell
-# 1. complete the configuration files (env.properties)
-
-# switch to tools namespace
-oc project <namespace>-tools
-
-# 2. build:
-oc process --ignore-unknown-parameters=true \
--f openshift_manifests/templates/build.yml \
---param-file=openshift_manifests/tools.properties | oc apply -f -
-
-# switch to dev namespace
-oc project <namespace>-dev
-
-# 3. import image to deployment namespace:
-oc tag <namespace>-tools/realm-o-matic-ansible:<version> realm-o-matic-ansible:<version>
-
-# 4. create secret and configmaps:
-oc process --ignore-unknown-parameters=true \
--f openshift_manifests/templates/prep.yaml \
---param-file=openshift_manifests/dev.properties | oc apply -f -
-
-# 5. deploy:
-oc process --ignore-unknown-parameters=true \
--f openshift_manifests/templates/deployment.yml \
---param-file=openshift_manifests/dev.properties | oc apply -f -
-
-# get all components:
-oc get all -l app=realm-o-matic-ansible
-```
+***Scripted OCP Installation [Steps](openshift_manifests/readme.md)***
 
 
 ## ++ Custom usages: ++
