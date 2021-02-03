@@ -1,9 +1,12 @@
-# Keycloak Realm Creator:
+# Realm-o-matic Ansible Component:
+
+This is the backend provisioner of Realm-o-Matic. When user create a request on Realm-o-Matic, a record will be created in DB (using a private GitHub repo for record tracking). This will send off a webhook to trigger this Ansible component. And based on different types of triggers, Realm-o-matic Ansible will carry out the provisioning tasks on dev,test and prod SSO instances.
+
 There are two parts that work together: 
 - Ansible Webhook: that receives a GitHub Pull Request payload from a private repo that tracks SSO realm request records from Realm-o-Matic
 - Ansible playbook: that creates Keycloak Realms based on realm configs and templates
 
-## Part 1: Ansible Webhook
+## ++ Part 1: Ansible Webhook ++
 
 ### Configuration
 The webhook service takes in a `hooks.json` or `hooks.yml` file. This is a single file that lists all hook configurations and defines: 
@@ -63,7 +66,7 @@ The Ansible playbook interacts with GitHub to place API calls. This requires a G
 - [webhook code](https://github.com/adnanh/webhook)
 
 
-## Part 2: Ansible playbook
+## ++ Part 2: Ansible playbook ++
 
 ### Input to the playbook
 This ansible playbook receives a GitHub Pull Request Labeling information, including the following:
