@@ -8,6 +8,7 @@
   vars:
   - flow_completed: false
   - realm_data: null
+  - custom: false
   tasks:
     - name: Start Work Flow
       block:
