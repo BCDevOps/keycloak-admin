@@ -136,7 +136,7 @@ parameters:
   required: true
   value: v1.0
 - description: Namespace where image is at
-  displayName: Namespacce
+  displayName: Namespace
   name: NAMESPACE
   required: true
   value: ''
