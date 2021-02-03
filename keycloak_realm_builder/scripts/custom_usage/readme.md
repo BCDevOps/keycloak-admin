@@ -11,6 +11,7 @@ Reuse provisioning playbook to setup realms specific for OCP4 login. See details
 
 ### 4. Setup K6 Test realm:
 Reuse provisioning playbook to setup realms for K6 test cases. See details [here](doc/k6-setup-automation.md).
+Don't forget to remove the temporary testing realms after K6 is finished.
 
 ### 5. Manually adding new Identity Provider for existing realm:
 Reuse provisioning playbook to create new IDP integration for existing realms. See details [here](doc/new-idp.md).
@@ -26,6 +27,7 @@ cp creds/sample.sso_vars.yml creds/sso_vars.yml
 # - if running in prod SSO, make sure to enter the correct OTP
 # - if SiteMinder integration is needed, make sure the instance URL is `https://<env>.oidc.gov.bc.ca`
 # - if GitHub integration is needed, you will need to create a GitHub OAuth app first
+# - if running in production env, you will need to pass in OTP for auth
 ```
 
 2. realm configs
