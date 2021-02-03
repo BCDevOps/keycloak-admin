@@ -111,7 +111,6 @@ objects:
       app: ${NAME}
     name: ${NAME}
   spec:
-    host: ${HOST}
     port:
       targetPort: 9000-tcp
     tls:
@@ -139,10 +138,5 @@ parameters:
 - description: Namespace where image is at
   displayName: Namespacce
   name: NAMESPACE
-  required: true
-  value: ''
-- description: Host url for GitHub webhook target
-  displayName: Host url
-  name: HOST
   required: true
   value: ''
