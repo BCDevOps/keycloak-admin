@@ -12,7 +12,7 @@ This tool helps debug our audit logs. The log files are gigantic. Usually we nee
 
 > the `rsyncLogs.sh` has a hardcoded label query it looks for pods with `deploymentConfig=$LABEL`
 
-1. log into your oc namespace and rysnc log files over `LOG_PATH=<path to audit logs in pod> DC_LABEL=<pod deployConfig label> ./rsyncLogs.sh`
+1. log into your oc namespace and rysnc log files over `LOG_PATH=<path to audit logs in pod> POD_SELECTOR=<pod label value pair ie 'deploymentconfig=foo'> ./rsyncLogs.sh`
 
 3. query JSON by realm. `LOG_PATH=<path to json files> ./queryJsonByRealm.sh <realmId>`
 
@@ -20,7 +20,7 @@ This tool helps debug our audit logs. The log files are gigantic. Usually we nee
 With a oneshot you could try:
 
 ```sh
-  LOG_PATH=$(LOG_PATH=<path to audit logs in pod> DC_LABEL=<pod deployConfig label> ./rsyncLogs.sh | tail -n 1) \
+  LOG_PATH=$(LOG_PATH=<path to audit logs in pod> POD_SELECTOR=<pod label> ./rsyncLogs.sh | tail -n 1) \
   ./queryJsonByRealm.sh <realmId>
 ```
 
@@ -28,4 +28,4 @@ With a oneshot you could try:
 
 Now that you have a realm specific audit log. You can leverage jq to get more info:
 
-- filtering by client: `LOG_PATH=... ./queryJsonByRealm.sh <realmid> | jq '.[] | select(.message | test(clientId=...))'
+- filtering by client: `LOG_PATH=... ./queryJsonByRealm.sh <realmid> | jq '.[] | select(.message | test("clientId=foo"))'
