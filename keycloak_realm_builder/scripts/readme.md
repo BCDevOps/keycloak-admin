@@ -111,6 +111,8 @@ This ansible playbook receives a GitHub Pull Request Labeling information, inclu
   - If the trigger points to a `bceid-approved` labeling, start Prod-BCeID-enabling-Flow
 4. If any of the steps fail, throw a message and add a Failure label to the PR to trigger notification steps in [Realm-O-Matic](https://github.com/bcgov/realm-o-matic)
 
+Please note that all KeyCloak requests are made to the `SSO Admin REST API`, details here: https://access.redhat.com/webassets/avalon/d/red-hat-single-sign-on/version-7.4/restapi/
+
 #### Realm-Creation-Flow
 There are three instances of Keycloak that we support, dev, test and prod. Whenever a realm request is to be processed, same realms will be created in three Keycloaks. That being said, the realm creation play will be run three times, and they all include the following steps:
 1. Setup Keycloak api request
