@@ -106,7 +106,4 @@ parameters:
   displayName: ANSIBLE_OPERATOR_VERSION
   name: ANSIBLE_OPERATOR_VERSION
   required: true
-  value: v0.8.1
-
-
-  
+  value: v1.4.0

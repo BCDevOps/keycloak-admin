@@ -1,12 +1,14 @@
+# Reference:
+# - https://quay.io/repository/operator-framework/ansible-operator
+# - https://github.com/adnanh/webhook
+
 FROM        quay.io/operator-framework/ansible-operator:v1.4.0
 
 # Testing:
-# RUN         pip --version
 RUN         pip3 --version
 
 # Upgrade ansible version:
 USER        1001
-# RUN         pip3 install --user --upgrade pip3
 RUN         pip3 install --user --ignore-installed ansible==2.9.6
 RUN         ansible --version
 
@@ -20,8 +22,6 @@ RUN         curl -L --silent -o webhook.tar.gz https://github.com/adnanh/webhook
 COPY        scripts/  .
 
 # TODO:
-# - Upgrade python version
-
 # - Install idap dependencies
 # RUN         pip install --upgrade pip && \
 #             pip install python-ldap
