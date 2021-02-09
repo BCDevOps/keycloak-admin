@@ -1,13 +1,13 @@
 FROM        quay.io/operator-framework/ansible-operator:v1.4.0
 
 # Testing:
-RUN         pip --version
+# RUN         pip --version
 RUN         pip3 --version
 
 # Upgrade ansible version:
 USER        1001
-RUN         pip install --user --upgrade pip
-RUN         pip install --user --ignore-installed ansible=2.9.6
+RUN         pip3 install --user --upgrade pip3
+RUN         pip3 install --user --ignore-installed ansible
 RUN         ansible --version
 
 ENV         WEBHOOK_VERSION 2.6.9
