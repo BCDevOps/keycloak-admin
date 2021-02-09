@@ -94,8 +94,6 @@
   uri: 
     url: "{{ keycloak_url }}/auth/admin/realms/{{ realm }}/users/{{ new_user_id }}/groups/{{ admin_group_id }}"
     method: PUT
-    body_format: json
-    return_content: yes
     status_code: 204
     headers:
       Authorization: "Bearer {{ token_data }}"
