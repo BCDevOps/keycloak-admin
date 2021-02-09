@@ -7,7 +7,7 @@ RUN         pip3 --version
 # Upgrade ansible version:
 USER        1001
 # RUN         pip3 install --user --upgrade pip3
-RUN         pip3 install --user --ignore-installed ansible=2.9.6
+RUN         pip3 install --user --ignore-installed ansible==2.9.6
 RUN         ansible --version
 
 ENV         WEBHOOK_VERSION 2.6.9
