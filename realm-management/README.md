@@ -1,7 +1,9 @@
-## NodeJs based Keycloak admin actions:
+# NodeJs based Keycloak admin actions:
 For better flexibility, we are using NodeJs based app to manage operational tasks.
 
-### Current functions:
+Leverages a NPM package for KeyCloak Admin actions, see details here: https://www.npmjs.com/package/keycloak-admin
+
+## Current functions:
 - list all realms
 - list users for specific realm
 - list all users
@@ -12,16 +14,25 @@ For better flexibility, we are using NodeJs based app to manage operational task
 - backup realm settings
 - disable roles across all realms
 
-### Setup:
-Copy .env to different KC environments, such as `.env-test`. Fill in the env vars required in the .env file.
-
-### Run:
+## Setup and Run:
 ```shell
-# install dependencies:
+# 1. Create env file for each SSO environment and fill in:
+cp .env-sample .env-<environment>
+
+# Environment would be:
+# - sbox for sandbox test run
+# - dev
+# - test
+# - prod
+
+
+# 2. Install dependencies:
 npm install
 
-# update index.js for actions needed
+# 3. Update index.js for actions needed
 
-# to run in dev environment:
-npm run kc-dev
+# 4. Run in <environment> environment:
+npm run kc-<environment>
+
+# depends on the function output, would be console logs or file in ./output folder
 ```
