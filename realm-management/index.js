@@ -6,6 +6,8 @@ const { getAllRealms, getRealmSettings, getRealmUsers, getAllRealmAdmins, getRea
 // const { ssoServiceNameMigration } = require('./libs/service-name-migration');
 // const { deleteClientRole } = require('./libs/update-client-role');
 const { activeMonthlyUsersReport } = require('./libs/get-amu.js');
+const { realmRolesReport } = require('./libs/realms-without-roles.js');
+
 const { KC_CONFIG, KC_TERMS } = require('./constants');
 
 const main = async () => {
@@ -53,6 +55,9 @@ const main = async () => {
     // await deleteClientRole(KC_TERMS.IMPERSONATION_ROLE, false);
     // +++ Generate activeMonthlyUsersReport
     // const report = await activeMonthlyUsersReport(kcAdminClient);
+
+    // +++ Investigate realms without custom roles
+    await realmRolesReport(kcAdminClient);
 
   } catch (err) {
     throw Error(err);
