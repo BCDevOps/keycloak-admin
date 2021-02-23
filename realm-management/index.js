@@ -57,7 +57,7 @@ const main = async () => {
     // const report = await activeMonthlyUsersReport(kcAdminClient);
 
     // +++ Investigate realms without custom roles
-    await realmRolesReport(kcAdminClient);
+    // await realmRolesReport(kcAdminClient);
 
   } catch (err) {
     throw Error(err);
