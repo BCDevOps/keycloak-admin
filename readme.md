@@ -12,3 +12,6 @@ Manage KC resources using Shell scripts (deprecated). See [readme](sh_scripts/re
 
 ## log-query-tool
 SSO Pod Log Query Tool. There are audit logs saved for all SSO keycloak pods. To be able to efficiently filter the logs based on information like realm ID, use the log query tool. See [readme](log-query-tool/README.md) for more details.
+
+## postman
+A postman collection for the admin API. Import the environment and the collection. Set the environment variables. Hit the /root/Authenticate request (populates the AuthToken variable). Now you have an easy GUI for querying the API and can set querystring variables, path variables, request body content, etc. 
