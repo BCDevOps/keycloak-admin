@@ -1,0 +1,64 @@
+---
+# Use this task list to config keycloak instances
+# - create IDP realms: IDIR/GitHub
+# - setup IDP realms with IDP and mappers
+# - create app realm
+# - setup app realm with IDP pointing to IDP realms
+
+- name: Setup keycloak variables for the environment
+  set_fact: 
+    keycloak_url: "{{ lookup('vars', env + '_keycloak_url') }}"
+    grant_type: "{{ lookup('vars', env + '_grant_type') }}"
+    keycloak_user_id: "{{ lookup('vars', env + '_keycloak_user_id') }}"
+    keycloak_user_password: "{{ lookup('vars', env + '_keycloak_user_password') }}"
+    otp_code: "{{ lookup('vars', env + '_otp_code') }}"
+    keycloak_client_id: "{{ lookup('vars', env + '_keycloak_client_id') }}"
+    keycloak_client_secret: "{{ lookup('vars', env + '_keycloak_client_secret') }}"
+
+- name: Get access token
+  include_tasks: access-token.yml
+
+# Setup BCeID "Both" Realm (allows business + basic)
+- name: Create BCeID Both Realm
+  include: "{{ reuse_tasks }}/realm_tasks/create-realm.yml"
+  vars:
+  - realm_data: "{{ bceid_both_realm_data }}"
+
+- name: Update access token
+  include_tasks: access-token.yml
+
+- name: Setup IDP in BCeID "Both" realm
+  include_tasks: create-idp.yml
+  vars:
+  - idp_realm_id: "{{ bceid_both_realm_data.realm.id }}"
+  - idp_realm_alias: "{{ bceid_both_realm_data.realm.idp }}"
+
+# Setup BCeID Business Realm (allows just business)
+- name: Create BCeID Business Realm
+  include: "{{ reuse_tasks }}/realm_tasks/create-realm.yml"
+  vars:
+  - realm_data: "{{ bceid_business_realm_data }}"
+
+- name: Update access token
+  include_tasks: access-token.yml
+
+- name: Setup IDP in BCeID "Both" realm
+  include_tasks: create-idp.yml
+  vars:
+  - idp_realm_id: "{{ bceid_business_realm_data.realm.id }}"
+  - idp_realm_alias: "{{ bceid_business_realm_data.realm.idp }}"
+
+# Setup BCeID Basic Realm (allows just basic)
+- name: Create BCeID Basic Realm
+  include: "{{ reuse_tasks }}/realm_tasks/create-realm.yml"
+  vars:
+  - realm_data: "{{ bceid_basic_realm_data }}"
+
+- name: Update access token
+  include_tasks: access-token.yml
+
+- name: Setup IDP in BCeID "Both" realm
+  include_tasks: create-idp.yml
+  vars:
+  - idp_realm_id: "{{ bceid_basic_realm_data.realm.id }}"
+  - idp_realm_alias: "{{ bceid_basic_realm_data.realm.idp }}"
