@@ -9,6 +9,10 @@
   - app_realm_data: "{{ lookup('file', 'inputs/realm-content-app.json') | from_json }}"
   - idir_realm_data: "{{ lookup('file', 'inputs/realm-content-idir.json') | from_json }}"
   - github_realm_data: "{{ lookup('file', 'inputs/realm-content-github.json') | from_json }}"
+  - bceid_both_realm_data: "{{ lookup('file', 'inputs/realm-content-bceid-both.json') | from_json }}"
+  - bceid_business_realm_data: "{{ lookup('file', 'inputs/realm-content-bceid-business.json') | from_json }}"
+  - bceid_basic_realm_data: "{{ lookup('file', 'inputs/realm-content-bcdid-basic.json') | from_json }}"
+
   # path to different tasks:
   - reuse_tasks: ../../tasks
   tasks:
