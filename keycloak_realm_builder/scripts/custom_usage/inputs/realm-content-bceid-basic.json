@@ -1,0 +1,9 @@
+{
+    "id": "bceid-basic",
+    "realm": {
+        "id": "bceid-basic",
+        "displayName": "bceid-basic",
+        "adminUser": "",
+        "idp": ""
+    }
+}
