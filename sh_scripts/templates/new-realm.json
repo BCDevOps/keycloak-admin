@@ -1,8 +1,8 @@
 {
-  "id": "#{NAME}",
-  "realm": "#{NAME}",
-  "displayName":"#{DISPLAY_NAME}",
-  "displayNameHtml":"<a>#{DISPLAY_NAME}</a>",
+  "id": "",
+  "realm": "testsandbox",
+  "displayName":"testsandbox",
+  "displayNameHtml":"<a>testsandbox</a>",
   "enabled": true,
   "groups":[
     {
