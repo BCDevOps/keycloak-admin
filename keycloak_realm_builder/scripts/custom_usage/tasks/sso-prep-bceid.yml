@@ -34,31 +34,31 @@
   - idp_realm_alias: "{{ bceid_both_realm_data.realm.idp }}"
 
 # Setup BCeID Business Realm (allows just business)
-- name: Create BCeID Business Realm
-  include: "{{ reuse_tasks }}/realm_tasks/create-realm.yml"
-  vars:
-  - realm_data: "{{ bceid_business_realm_data }}"
+# - name: Create BCeID Business Realm
+#   include: "{{ reuse_tasks }}/realm_tasks/create-realm.yml"
+#   vars:
+#   - realm_data: "{{ bceid_business_realm_data }}"
 
-- name: Update access token
-  include_tasks: access-token.yml
+# - name: Update access token
+#   include_tasks: access-token.yml
 
-- name: Setup IDP in BCeID "Both" realm
-  include_tasks: create-idp.yml
-  vars:
-  - idp_realm_id: "{{ bceid_business_realm_data.realm.id }}"
-  - idp_realm_alias: "{{ bceid_business_realm_data.realm.idp }}"
+# - name: Setup IDP in BCeID "Both" realm
+#   include_tasks: create-idp.yml
+#   vars:
+#   - idp_realm_id: "{{ bceid_business_realm_data.realm.id }}"
+#   - idp_realm_alias: "{{ bceid_business_realm_data.realm.idp }}"
 
 # Setup BCeID Basic Realm (allows just basic)
-- name: Create BCeID Basic Realm
-  include: "{{ reuse_tasks }}/realm_tasks/create-realm.yml"
-  vars:
-  - realm_data: "{{ bceid_basic_realm_data }}"
+# - name: Create BCeID Basic Realm
+#   include: "{{ reuse_tasks }}/realm_tasks/create-realm.yml"
+#   vars:
+#   - realm_data: "{{ bceid_basic_realm_data }}"
 
-- name: Update access token
-  include_tasks: access-token.yml
+# - name: Update access token
+#   include_tasks: access-token.yml
 
-- name: Setup IDP in BCeID "Both" realm
-  include_tasks: create-idp.yml
-  vars:
-  - idp_realm_id: "{{ bceid_basic_realm_data.realm.id }}"
-  - idp_realm_alias: "{{ bceid_basic_realm_data.realm.idp }}"
+# - name: Setup IDP in BCeID "Both" realm
+#   include_tasks: create-idp.yml
+#   vars:
+#   - idp_realm_id: "{{ bceid_basic_realm_data.realm.id }}"
+#   - idp_realm_alias: "{{ bceid_basic_realm_data.realm.idp }}"

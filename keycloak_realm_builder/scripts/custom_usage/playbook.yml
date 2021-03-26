@@ -11,7 +11,7 @@
   - github_realm_data: "{{ lookup('file', 'inputs/realm-content-github.json') | from_json }}"
   - bceid_both_realm_data: "{{ lookup('file', 'inputs/realm-content-bceid-both.json') | from_json }}"
   - bceid_business_realm_data: "{{ lookup('file', 'inputs/realm-content-bceid-business.json') | from_json }}"
-  - bceid_basic_realm_data: "{{ lookup('file', 'inputs/realm-content-bcdid-basic.json') | from_json }}"
+  - bceid_basic_realm_data: "{{ lookup('file', 'inputs/realm-content-bceid-basic.json') | from_json }}"
 
   # path to different tasks:
   - reuse_tasks: ../../tasks
@@ -32,6 +32,14 @@
     loop_control: 
       loop_var: env
     when: action == "config-keycloak"
+
+  - name: Setup SSO instance with bceid realms
+    include_tasks: tasks/sso-prep-bceid.yml
+    with_items: 
+      - "{{ environments }}"
+    loop_control: 
+      loop_var: env
+    when: action == "config-keycloak-bceid"
 
   # For OCP4 login or K6 testing setup, update the app_realm_data content and specify what are the IDPs needed
   - name: Provision new SSO realms
