@@ -4,5 +4,9 @@ sso_vars.yml
 # Input
 realm-content-*.json
 
+!realm-content-bceid-basic.json
+!realm-content-bceid-both.json
+!realm-content-bceid-business.json
+
 # Outputs
 output*
