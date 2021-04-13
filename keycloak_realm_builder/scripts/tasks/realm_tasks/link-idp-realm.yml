@@ -8,7 +8,7 @@
 
 - name: Set IDP name mapper fact
   set_fact:
-    idp_name_id: { IDIR: idir, GitHub: _github, BCeID: _bceid }
+    idp_name_id: { IDIR: idir, GitHub: _github, BCeID: _bceidbasicbusiness }
 - name: Set IDP realm ID fact
   set_fact:
     idp_realm_id: "{{ idp_name_id[idp_name] }}"
