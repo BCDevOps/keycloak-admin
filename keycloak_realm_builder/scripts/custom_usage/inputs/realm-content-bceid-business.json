@@ -1,9 +1,9 @@
 {
-    "id": "bceid-business",
+    "id": "_bceidbusiness",
     "realm": {
-        "id": "bceid-business",
+        "id": "_bceidbusiness",
         "displayName": "bceid-business",
         "adminUser": "",
-        "idp": ""
+        "idp": "_bceidbusiness"
     }
 }
