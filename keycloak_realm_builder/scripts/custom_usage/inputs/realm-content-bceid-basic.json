@@ -1,9 +1,9 @@
 {
-    "id": "bceid-basic",
+    "id": "_bceidbasic",
     "realm": {
-        "id": "bceid-basic",
+        "id": "_bceidbasic",
         "displayName": "bceid-basic",
         "adminUser": "",
-        "idp": ""
+        "idp": "_bceidbasic"
     }
 }
