@@ -6,6 +6,7 @@
 # - create IDP in app realm
 # - create mappers for IDP
 
+# --------------- Restricting "personal" bceids -------------------
 - name: Set IDP name mapper fact
   set_fact:
     idp_name_id: { IDIR: idir, GitHub: _github, BCeID: _bceidbasicbusiness }
