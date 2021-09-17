@@ -59,7 +59,9 @@
     idps:
     - GitHub
     - IDIR
-    - BCeID
+    - BCeID-Business
+    - BCeID-Basic-and-Business
+    - BCeID-Basic
 
 - name: Delete Link to IDP Realms
   include_tasks: delete-idp-link.yml

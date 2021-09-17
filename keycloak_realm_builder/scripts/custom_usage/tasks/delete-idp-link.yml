@@ -3,7 +3,7 @@
 
 - name: Set IDP name mapper fact
   set_fact:
-    idp_name_id: { IDIR: idir, GitHub: _github, BCeID: _bceid }
+    idp_name_id: { IDIR: idir, GitHub: _github, BCeID-Basic: _bceidbasic, BCeID-Basic-and-Business: _bceidbasicbusiness, BCeID-Business: _bceidbusiness}
 
 - name: Set IDP realm ID fact
   set_fact:

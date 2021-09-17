@@ -1,29 +1,26 @@
 [
   {
+    "name": "displayName",
+    "identityProviderAlias": "{{ idp_realm_alias }}",
+    "identityProviderMapper": "oidc-user-attribute-idp-mapper",
     "config": {
-      "attribute.name": "email",
-      "user.attribute": "email"
-    },
-    "identityProviderAlias": "_bceidbasic",
-    "identityProviderMapper": "saml-user-attribute-idp-mapper",
-    "name": "email"
-  },
-  {
-    "config": {
-      "attribute.name": "displayname",
+      "claim": "displayName",
       "user.attribute": "displayName"
-    },
-    "identityProviderAlias": "_bceidbasic",
-    "identityProviderMapper": "saml-user-attribute-idp-mapper",
-    "name": "displayName"
-  },
-  {
+    }
+  }, {
+    "name": "username",
+    "identityProviderAlias": "{{ idp_realm_alias }}",
+    "identityProviderMapper": "oidc-username-idp-mapper",
     "config": {
-      "attribute.name": "useridentifier",
-      "user.attribute": "_bceidbasic_userid"
-    },
-    "identityProviderAlias": "_bceidbasic",
-    "identityProviderMapper": "saml-user-attribute-idp-mapper",
-    "name": "_bceidbasic_userid"
+      "template": "${CLAIM.preferred_username}@${ALIAS}"
+    }
+  }, {
+    "name": "email",
+    "identityProviderAlias": "{{ idp_realm_alias }}",
+    "identityProviderMapper": "oidc-user-attribute-idp-mapper",
+    "config": {
+      "claim": "email",
+      "user.attribute": "email"
+    }
   }
 ]

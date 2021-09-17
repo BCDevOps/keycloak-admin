@@ -35,6 +35,34 @@
       }
     },
     {
+      "name": "bceid_business_guid",
+      "protocol": "openid-connect",
+      "protocolMapper": "oidc-usermodel-attribute-mapper",
+      "consentRequired": false,
+      "config": {
+        "userinfo.token.claim": "true",
+        "user.attribute": "bceid_business_guid",
+        "id.token.claim": "true",
+        "access.token.claim": "true",
+        "claim.name": "bceid_business_guid",
+        "jsonType.label": "String"
+      }
+    },
+    {
+      "name": "bceid_business_name",
+      "protocol": "openid-connect",
+      "protocolMapper": "oidc-usermodel-attribute-mapper",
+      "consentRequired": false,
+      "config": {
+        "userinfo.token.claim": "true",
+        "user.attribute": "bceid_business_name",
+        "id.token.claim": "true",
+        "access.token.claim": "true",
+        "claim.name": "bceid_business_name",
+        "jsonType.label": "String"
+      }
+    },
+    {
       "name": "username",
       "protocol": "openid-connect",
       "protocolMapper": "oidc-usermodel-property-mapper",
