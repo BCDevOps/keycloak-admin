@@ -96,6 +96,12 @@ const main = async () => {
 
     // +++ Disable impersonation role:
     // await deleteClientRole(KC_TERMS.IMPERSONATION_ROLE, false);
+    // +++ Generate activeMonthlyUsersReport
+    // const report = await activeMonthlyUsersReport(kcAdminClient);
+
+    // +++ Investigate realms without custom roles
+    // await realmRolesReport(kcAdminClient);
+
   } catch (err) {
     console.error(err);
   }
