@@ -22,12 +22,14 @@
   },
   "homepage": "https://github.com/cvarjao/keycloak-admin#readme",
   "dependencies": {
-    "axios": "^0.21.1",
-    "dayjs": "^1.10.4",
+    "@octokit/rest": "^19.0.5",
+    "axios": "^0.18.1",
     "dotenv": "^8.2.0",
     "fs-extra": "^8.1.0",
+    "https": "^1.0.0",
     "keycloak-admin": "^1.14.3",
     "ldapjs": "^1.0.2",
+    "node-https": "^0.1.3",
     "prompts": "^2.4.0"
   },
   "devDependencies": {

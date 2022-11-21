@@ -3,14 +3,15 @@ const dotenv = require('dotenv');
 // setup KC env file
 dotenv.config({ path: `.env-${process.env.KC_ENV}` });
 
+const GH_AUTH = {
+  GITHUB_TOKEN: process.env.GITHUB_TOKEN,
+  GITHUB_API: 'https://api.github.com/users/'
+};
+
 const KC_CONFIG = {
   REQUEST: {
     baseUrl: process.env.KEYCLOAK_URL,
     realmName: process.env.MASTER_REALM_NAME,
-    requestConfig: {
-      /* Axios request config options https://github.com/axios/axios#request-config */
-      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-    },
   },
   AUTH: {
     username: process.env.KEYCLOAK_ADMIN_USER_ID,
@@ -119,6 +120,7 @@ module.exports = {
   IDP_TERMS,
   IDP_REF,
   CLIENT_MIGRATION_FIELDS,
+  GH_AUTH,
   KC_CONFIG,
   KC_TERMS,
   IDP_MAPPER_TYPES,

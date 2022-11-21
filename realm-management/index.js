@@ -1,14 +1,12 @@
 const kcAdmin = require('keycloak-admin').default;
 const fs = require('fs-extra');
+const { Http } = require('node-https');
 
-// const { importLdapUsers, createUsers } = require('./libs/import-users');
+const { importLdapUsers, createUsers, createUserWithIDP } = require('./libs/import-users');
 const { getAllRealms, getRealmSettings, getRealmUsers, getAllRealmAdmins, getRealmAdmins, getAllUsers } = require('./libs/get-realms');
 // const { ssoServiceNameMigration } = require('./libs/service-name-migration');
 // const { deleteClientRole } = require('./libs/update-client-role');
-const { activeMonthlyUsersReport } = require('./libs/get-amu.js');
-const { realmRolesReport } = require('./libs/realms-without-roles.js');
-
-const { KC_CONFIG, KC_TERMS } = require('./constants');
+const { KC_CONFIG, KC_TERMS, GH_AUTH } = require('./constants');
 
 const main = async () => {
   try {
@@ -21,6 +19,51 @@ const main = async () => {
     // kcAdminClient.setConfig({
     //   realmName: KC_CONFIG.REALM.NAME,
     // });
+
+    // // ---------- Platform-services team SSO realm Migration:----------
+    // // 0. setup Github client:
+    // const http = new Http();
+    // const httpOptions = {
+    //   headers: {
+    //     'User-Agent': `Awesome-Octocat-App`,
+    //     'authorization': `Bearer ${GH_AUTH.GITHUB_TOKEN}`
+    //   }
+    // };
+
+    // // 1. get all old users
+    // const OUTPUT_FILE=`output/prod-users.json`;
+    // // const realmUsers = await getRealmUsers(kcAdminClient, KC_CONFIG.REALM.NAME);
+    // // await fs.outputJson(OUTPUT_FILE, realmUsers);
+
+    // // 2. create new users:
+    // /* Read users.json file */
+    // const input = JSON.parse(
+    //   fs.readFileSync(OUTPUT_FILE, { encoding: 'utf-8' }, (err) => {
+    //     console.error(err);
+    //     process.exit();
+    //   }),
+    // );
+
+    // const users = input.users;
+
+    // // eslint-disable-next-line no-restricted-syntax
+    // for (const user of users) {
+    //   // for each user:
+    //   // eslint-disable-next-line no-await-in-loop
+    //   // 0. abstract out the github username
+    //   const username = user.split("@")[0];
+    //   // 1. get github account ID
+    //   const githubUserContent = await http.get(`${GH_AUTH.GITHUB_API}${username}`, httpOptions);
+    //   const newUser = {
+    //     githubID: githubUserContent.data.id,
+    //     username: username,
+    //   }
+    //   console.log(newUser);
+
+    //   // 2. create keycloak user
+    //   await createUserWithIDP(kcAdminClient, newUser);
+    // }
+    // ----------------------------------------
 
     // +++ Get all realms:
     // const allRealms = await getAllRealms(kcAdminClient);
@@ -60,7 +103,7 @@ const main = async () => {
     // await realmRolesReport(kcAdminClient);
 
   } catch (err) {
-    throw Error(err);
+    console.error(err);
   }
 };
 main();

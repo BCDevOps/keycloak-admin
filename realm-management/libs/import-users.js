@@ -157,6 +157,69 @@ const createUserWithRoles = async (kcAdminClient, user, idpSuffix = '@idir') => 
 };
 
 /**
+ * Pre-populate user with Github username
+ * @param {kcAdmin} kcAdminClient with auth setup
+ * @param {Object} user that contains user info
+ * @param {String} idpSuffix default to github
+ * user: githubID, username
+ */
+ const createUserWithIDP = async (kcAdminClient, user, idpSuffix = '@github') => {
+  try {
+    // check valid input
+    if (!user.username || !user.githubID) console.warn('This user is undefined');
+    const fullUsername = `${user.username}${idpSuffix}`;
+    const userIDPSuffix = '@githubpublic';
+    const fullIDPUsername = `${user.githubID}${userIDPSuffix}`;
+
+
+    // check user exists:
+    const targetUser = await kcAdminClient.users.find(fullUsername);
+    let newUserId;
+    let userExist = false;
+
+    if (targetUser.length > 0) {
+      const resultUsers = targetUser.filter((u) => u.username === fullUsername);
+
+      if (resultUsers.length === 0) {
+        userExist = false;
+      } else if (resultUsers.length === 1) {
+        userExist = true;
+        console.log(`User exists: ${fullUsername}`);
+        newUserId = resultUsers[0].id;
+      } else {
+        throw Error(`Multiple users found with username ${fullUsername}`);
+      }
+    }
+
+    // if not exist, create user:
+    if (!userExist) {
+      console.log(`Create New User: ${fullUsername}`);
+      // create new user
+      const newUser = await kcAdminClient.users.create({
+        username: fullUsername,
+        enabled: true,
+      });
+      newUserId = newUser.id;
+      console.log(`User ID: ${newUserId}`);
+
+      await kcAdminClient.users.addToFederatedIdentity({
+        id: newUserId,
+        federatedIdentityId: 'oidc-github',
+        federatedIdentity: {
+          userId: fullIDPUsername,
+          userName: fullIDPUsername,
+          identityProvider: 'oidc-github',
+        },
+      });
+    }
+
+  } catch (err) {
+    throw Error(err);
+  }
+};
+
+
+/**
  * Create list of users from file input
  * @param {kcAdmin} kcAdminClient with auth setup and specified realm
  */
@@ -181,4 +244,4 @@ const createUsers = async (kcAdminClient) => {
   }
 };
 
-module.exports = { importLdapUsers, createUsers };
+module.exports = { importLdapUsers, createUsers, createUserWithIDP };
